@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { HttpException, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/exception/exception-filter/http-exception.filter';
 import { ErrorViewType } from './common/exception/types/error.view.type';
 
@@ -23,7 +23,7 @@ async function bootstrap() {
           errorsViewModel.push(errViewModel);
         });
 
-        throw new HttpException(errorsViewModel, 400);
+        throw new BadRequestException(errorsViewModel);
       },
     }),
   );

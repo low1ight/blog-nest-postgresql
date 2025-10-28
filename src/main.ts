@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/exception/exception-filter/http-exception.filter';
+import { ErrorViewType } from './common/exception/types/error.view.type';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,12 +10,12 @@ async function bootstrap() {
     new ValidationPipe({
       stopAtFirstError: true,
       exceptionFactory: (errors) => {
-        const errorsViewModel: { message: string; field: string }[] = [];
+        const errorsViewModel: ErrorViewType[] = [];
 
         errors.forEach((e) => {
           if (!e.constraints) return;
 
-          const errViewModel = {
+          const errViewModel: ErrorViewType = {
             message: Object.values(e.constraints)[0],
             field: e.property,
           };

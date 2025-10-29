@@ -3,11 +3,7 @@ import { UsersRepository } from '../repositories/users.repository';
 import { CreateUserInsertType } from '../types/create-user.insert.type';
 import { CreateUserDto } from '../dto/CreateUserDto';
 import { Result, ResultType } from '../../../../common/helpers/Result';
-import {
-  ErrorType,
-  InputError,
-  ResultError,
-} from '../../../../common/exception/exception-filter/Error';
+import { ResultInputError } from '../../../../common/exception/exception-filter/Error';
 
 @Injectable()
 export class UsersService {
@@ -17,22 +13,20 @@ export class UsersService {
     login,
     password,
     email,
-  }: CreateUserDto): Promise<ResultType<string, InputError>> {
+  }: CreateUserDto): Promise<ResultType<string, ResultInputError>> {
     const isUserLoginExist =
       await this.usersRepository.isUserExistByLogin(login);
     const isUserEmailExist =
       await this.usersRepository.isUserExistByEmail(email);
 
     if (isUserLoginExist)
-      return Result.fail(
-        ResultError.inputError('user already exist', 'user'),
-        ErrorType.InvalidInput,
+      return Result.fail<ResultInputError>(
+        new ResultInputError('user already exist', 'user'),
       );
 
     if (isUserEmailExist)
-      return Result.fail(
-        ResultError.inputError('email already exist', 'email'),
-        ErrorType.InvalidInput,
+      return Result.fail<ResultInputError>(
+        new ResultInputError('email already exist', 'email'),
       );
 
     const userInputModel: CreateUserInsertType = {

@@ -18,7 +18,8 @@ export class AuthController {
   @Post('registration')
   async registration(@Body() dto: CreateUserDto) {
     const result = await this.authService.registration(dto);
-    if (!result.isSuccessful) throw new BadRequestException(result.error);
+    if (!result.isSuccessful)
+      throw new BadRequestException([result.error.message]);
     return result.content;
   }
 }

@@ -5,6 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { InputError } from './Error';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -16,8 +17,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exc = exception.getResponse();
 
     if (status === 400) {
+      const err = exc['message'] as InputError | InputError[];
       response.status(status).json({
-        errorsMessages: [exc],
+        errorsMessages: err,
       });
     } else {
       response.status(status).json({

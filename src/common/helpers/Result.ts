@@ -3,8 +3,8 @@ export class Result {
     return { content: content, isSuccessful: true };
   }
 
-  static fail<T>(err: T, errorType: string): FailResult<T> {
-    return { error: err, isSuccessful: false, errorType };
+  static fail<T>(err: T): FailResult<T> {
+    return { error: err, isSuccessful: false };
   }
 }
 
@@ -16,6 +16,5 @@ export type SuccessfulResult<T> = {
 };
 export type FailResult<T> = {
   isSuccessful: false;
-  errorType: string;
   error: T;
 };

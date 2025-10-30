@@ -4,10 +4,14 @@ import { CreateUserInsertType } from '../types/create-user.insert.type';
 import { CreateUserDto } from '../dto/CreateUserDto';
 import { Result, ResultType } from '../../../../common/helpers/Result';
 import { ResultInputError } from '../../../../common/exception/exception-filter/Error';
+import { PasswordHashService } from '../../../../common/services/password-hash.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly passwordHashService: PasswordHashService,
+  ) {}
 
   async creatUser({
     login,
@@ -31,7 +35,7 @@ export class UsersService {
 
     const userInputModel: CreateUserInsertType = {
       login,
-      password,
+      password: await this.passwordHashService.hash(password),
       email,
       createdAt: new Date().toISOString(),
     };

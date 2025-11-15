@@ -1,4 +1,4 @@
-import { IsNotEmpty, Min } from 'class-validator';
+import { IsBoolean, IsNotEmpty, Min } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { ConfigValidationUtility } from './config.validation.utility';
 import { Injectable } from '@nestjs/common';
@@ -20,8 +20,18 @@ export class CoreConfig {
   @IsNotEmpty({ message: 'Set Env variable PG_HOST, example: "localhost"' })
   pgHost: string;
 
+  @IsBoolean({
+    message: 'Set Env variable INCLUDE_TESTING_MODULE, example: true,false,0,1',
+  })
+  includeTestModule: boolean;
+
   constructor(private configService: ConfigService) {
     this.port = Number(this.configService.get('PORT'));
+
+    this.includeTestModule = ConfigValidationUtility.convertToBoolean(
+      this.configService.get('INCLUDE_TESTING_MODULE'),
+    ) as boolean;
+
     this.pgPort = Number(this.configService.get('PG_PORT'));
     this.pgUserName = this.configService.get('PG_USER_NAME') || '';
     this.pgPassword = this.configService.get('PG_PASSWORD') || '';

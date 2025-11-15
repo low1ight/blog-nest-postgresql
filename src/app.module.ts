@@ -7,6 +7,7 @@ import { AuthModule } from './modules/iam/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'node:process';
 import { CoreConfig } from './core/core.config';
+import { TestingModule } from './modules/testing/testing.module';
 
 console.log(process.env.PG_PORT);
 
@@ -33,6 +34,10 @@ export class AppModule {
         inject: [CoreConfig],
       }),
     ];
+
+    if (coreConfig.includeTestModule) {
+      modules.push(TestingModule);
+    }
 
     return { module: AppModule, imports: modules };
   }

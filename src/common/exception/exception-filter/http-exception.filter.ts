@@ -17,9 +17,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exc = exception.getResponse();
 
     if (status === 400) {
-      const err = exc['message'] as InputError | InputError[];
+      const err = exc['message'] as InputError[];
       response.status(status).json({
-        errorsMessages: err,
+        errorsMessages: err ?? exc,
       });
     } else {
       response.status(status).json({

@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
-import { CreateUserInsertType } from '../types/create-user.insert.type';
-import { CreateUserDto } from '../dto/CreateUserDto';
-import { Result, ResultType } from '../../../../common/helpers/Result';
-import { ResultInputError } from '../../../../common/exception/exception-filter/Error';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { Result } from '../../../../common/helpers/result/result';
+import { ResultInputError } from '../../../../common/helpers/result/result-error';
 import { PasswordHashService } from '../../../../common/security/password-hash.service';
+import { UserInputModel } from '../models/user-input.model';
+import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';
+import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly passwordHashService: PasswordHashService,
+    private readonly userConfirmationRepository: UsersConfirmationRepository,
+    private readonly userPasswordRecoveryRepository: UsersPasswordRecoveryRepository,
   ) {}
 
-  async creatUser({
-    login,
-    password,
-    email,
-  }: CreateUserDto): Promise<ResultType<string, ResultInputError>> {
+  async creatUser({ login, password, email }: CreateUserDto) {
     const isUserLoginExist =
       await this.usersRepository.isUserExistByLogin(login);
     const isUserEmailExist =
@@ -33,15 +33,29 @@ export class UsersService {
         new ResultInputError('email already exist', 'email'),
       );
 
-    const userInputModel: CreateUserInsertType = {
+    const userInputModel: UserInputModel = {
       login,
       password: await this.passwordHashService.hash(password),
       email,
       createdAt: new Date().toISOString(),
     };
 
-    await this.usersRepository.createUser(userInputModel);
+    const userId: number =
+      await this.usersRepository.createUser(userInputModel);
 
-    return Result.ok('succssful created');
+    await this.userConfirmationRepository.createUserConfirmation({
+      userId,
+      isConfirmed: false,
+      confirmationCode: null,
+      codeExpirationDate: null,
+    });
+
+    await this.userPasswordRecoveryRepository.createPasswordRecoveryForUser({
+      userId,
+      recoveryCode: null,
+      codeExpirationDate: null,
+    });
+
+    return Result.ok();
   }
 }

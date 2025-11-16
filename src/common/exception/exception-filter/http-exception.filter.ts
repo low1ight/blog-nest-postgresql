@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { InputError } from './Error';
+import { InputError } from '../../helpers/result/result-error';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {

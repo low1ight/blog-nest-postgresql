@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { CreateUserInsertType } from '../types/create-user.insert.type';
-import { UserDocumentType } from '../types/user.document.type';
+import { UserDocumentModel } from '../models/user-document.model';
+import { UserInputModel } from '../models/user-input.model';
 
 @Injectable()
 export class UsersRepository {
@@ -13,18 +13,21 @@ export class UsersRepository {
     email,
     createdAt,
     password,
-  }: CreateUserInsertType) {
-    await this.dataSource.query(
+  }: UserInputModel): Promise<number> {
+    const result: { id: number }[] = await this.dataSource.query(
       `
         INSERT INTO public.users("login", "email", "password", "createdAt")
         VALUES ($1, $2, $3, $4)
+        RETURNING id
     `,
       [login, email, password, createdAt],
     );
+
+    return result[0]?.id;
   }
 
   async isUserExistByLogin(login: string): Promise<boolean> {
-    const result: UserDocumentType[] = await this.dataSource.query(
+    const result: UserDocumentModel[] = await this.dataSource.query(
       `
     SELECT * FROM public.users WHERE login = $1`,
       [login],
@@ -34,7 +37,7 @@ export class UsersRepository {
   }
 
   async isUserExistByEmail(email: string): Promise<boolean> {
-    const result: UserDocumentType[] = await this.dataSource.query(
+    const result: UserDocumentModel[] = await this.dataSource.query(
       `
     SELECT * FROM public.users WHERE email = $1`,
       [email],

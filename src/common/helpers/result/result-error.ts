@@ -1,19 +1,24 @@
-export enum ErrorType {
+export enum ResultErrorType {
   InvalidInput = 'Invalid input data',
 }
 
-abstract class ResultError<T> {
+export abstract class ResultError<T, ErrT extends ResultErrorType> {
   abstract message: T;
-  abstract errorType: ErrorType;
+  abstract errorType: ErrT;
 }
 
-export class ResultInputError extends ResultError<InputError> {
+export type ResultErrUnion = ResultInputError;
+
+export class ResultInputError extends ResultError<
+  InputError,
+  ResultErrorType.InvalidInput
+> {
   message: InputError;
-  errorType: ErrorType;
+  errorType: ResultErrorType;
   constructor(message: string, field: string) {
     super();
     this.message = { message, field };
-    this.errorType = ErrorType.InvalidInput;
+    this.errorType = ResultErrorType.InvalidInput;
   }
 }
 

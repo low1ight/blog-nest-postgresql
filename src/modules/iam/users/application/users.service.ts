@@ -23,15 +23,12 @@ export class UsersService {
     const isUserEmailExist =
       await this.usersRepository.isUserExistByEmail(email);
 
-    if (isUserLoginExist)
-      return Result.fail<ResultInputError>(
-        new ResultInputError('user already exist', 'user'),
-      );
+    const inputError: ResultInputError = new ResultInputError();
 
-    if (isUserEmailExist)
-      return Result.fail<ResultInputError>(
-        new ResultInputError('email already exist', 'email'),
-      );
+    if (isUserLoginExist) inputError.addErr('user already exist', 'user');
+    if (isUserEmailExist) inputError.addErr('email already exist', 'email');
+
+    if (inputError.isExistErr()) return Result.fail(inputError);
 
     const userInputModel: UserInputModel = {
       login,
@@ -56,6 +53,6 @@ export class UsersService {
       codeExpirationDate: null,
     });
 
-    return Result.ok();
+    return Result.ok('qwe');
   }
 }

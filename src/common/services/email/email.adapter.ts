@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import nodemailer from 'nodemailer';
+import { EmailConfig } from './email.config';
 
 @Injectable()
 export class EmailAdapter {
+  constructor(private readonly emailConfig: EmailConfig) {}
+
   sendEmail(email: string, subject: string, html: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: '',
-        pass: '',
+        user: this.emailConfig.nodemailerUser,
+        pass: this.emailConfig.nodemailerPassword,
       },
     });
 

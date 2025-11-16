@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { Result } from '../../../../common/helpers/result/result';
 import { ResultInputError } from '../../../../common/helpers/result/result-error';
 import { PasswordHashService } from '../../../../common/security/password-hash.service';
 import { UserInputModel } from '../models/user-input.model';
 import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
+import { Result } from '../../../../common/helpers/result/result';
 
 @Injectable()
 export class UsersService {

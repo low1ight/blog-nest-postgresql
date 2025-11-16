@@ -4,7 +4,7 @@ import { CreateUserInsertType } from '../types/create-user.insert.type';
 import { CreateUserDto } from '../dto/CreateUserDto';
 import { Result, ResultType } from '../../../../common/helpers/Result';
 import { ResultInputError } from '../../../../common/exception/exception-filter/Error';
-import { PasswordHashService } from '../../../../common/services/password-hash.service';
+import { PasswordHashService } from '../../../../common/security/password-hash.service';
 
 @Injectable()
 export class UsersService {

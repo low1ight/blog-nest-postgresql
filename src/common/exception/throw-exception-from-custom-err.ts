@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import {
   ResultErrorType,
   ResultErrUnion,
@@ -7,6 +7,11 @@ import {
 export function throwExceptionFromCustomErr(resultErr: ResultErrUnion) {
   switch (resultErr.errorType) {
     case ResultErrorType.InvalidInput:
-      throw new BadRequestException(resultErr.message);
+      throw new HttpException(resultErr.message, HttpStatus.BAD_REQUEST);
+    default:
+      throw new HttpException(
+        'An unexpected error occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
   }
 }

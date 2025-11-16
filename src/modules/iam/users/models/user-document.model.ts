@@ -1,4 +1,5 @@
-export type CreateUserInsertType = {
+export type UserDocumentModel = {
+  id: number;
   login: string;
   email: string;
   password: string;

@@ -14,7 +14,7 @@ export class AuthController {
 
   @Post('registration')
   async registration(@Body() dto: CreateUserDto) {
-    const result: ResultType<string, ResultInputError> =
+    const result: ResultType<null, ResultInputError> =
       await this.authService.registration(dto);
 
     if (result.isSuccessful) return result.content;

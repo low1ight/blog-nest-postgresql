@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { DataSource, QueryRunner } from 'typeorm';
 import { UserDocumentModel } from '../models/user-document.model';
 import { UserInputModel } from '../models/user-input.model';
 
@@ -8,20 +8,18 @@ import { UserInputModel } from '../models/user-input.model';
 export class UsersRepository {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
-  async createUser({
-    login,
-    email,
-    createdAt,
-    password,
-  }: UserInputModel): Promise<number> {
-    const result: { id: number }[] = await this.dataSource.query(
+  async createUser(
+    { login, email, createdAt, password }: UserInputModel,
+    transactionQueryRunner: QueryRunner,
+  ): Promise<number> {
+    const result = (await transactionQueryRunner.query(
       `
         INSERT INTO public.users("login", "email", "password", "createdAt")
         VALUES ($1, $2, $3, $4)
         RETURNING id
     `,
       [login, email, password, createdAt],
-    );
+    )) as { id: number }[];
 
     return result[0]?.id;
   }

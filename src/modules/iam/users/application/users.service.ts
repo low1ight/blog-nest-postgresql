@@ -3,10 +3,10 @@ import { UsersRepository } from '../repositories/users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ResultInputError } from '../../../../common/helpers/result/result-error';
 import { PasswordHashService } from '../../../../common/security/password-hash.service';
-import { UserInputModel } from '../models/user-input.model';
 import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
 import { Result } from '../../../../common/helpers/result/result';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +15,7 @@ export class UsersService {
     private readonly passwordHashService: PasswordHashService,
     private readonly userConfirmationRepository: UsersConfirmationRepository,
     private readonly userPasswordRecoveryRepository: UsersPasswordRecoveryRepository,
+    private readonly dataSource: DataSource,
   ) {}
 
   async creatUser({ login, password, email }: CreateUserDto) {
@@ -30,29 +31,50 @@ export class UsersService {
 
     if (inputError.isExistErr()) return Result.fail(inputError);
 
-    const userInputModel: UserInputModel = {
-      login,
-      password: await this.passwordHashService.hash(password),
-      email,
-      createdAt: new Date().toISOString(),
-    };
+    //create transaction
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      //create user
+      const userId: number = await this.usersRepository.createUser(
+        {
+          login,
+          password: await this.passwordHashService.hash(password),
+          email,
+          createdAt: new Date().toISOString(),
+        },
+        queryRunner,
+      );
 
-    const userId: number =
-      await this.usersRepository.createUser(userInputModel);
+      //create user-confirmation
+      await this.userConfirmationRepository.createUserConfirmation(
+        {
+          userId,
+          isConfirmed: false,
+          confirmationCode: null,
+          codeExpirationDate: null,
+        },
+        queryRunner,
+      );
 
-    await this.userConfirmationRepository.createUserConfirmation({
-      userId,
-      isConfirmed: false,
-      confirmationCode: null,
-      codeExpirationDate: null,
-    });
+      //create user-pass-recovery
+      await this.userPasswordRecoveryRepository.createPasswordRecoveryForUser(
+        {
+          userId,
+          recoveryCode: null,
+          codeExpirationDate: null,
+        },
+        queryRunner,
+      );
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
 
-    await this.userPasswordRecoveryRepository.createPasswordRecoveryForUser({
-      userId,
-      recoveryCode: null,
-      codeExpirationDate: null,
-    });
-
-    return Result.ok('qwe');
+    return Result.ok();
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ResultInputError } from '../../../../common/helpers/result/result-error';
-import { PasswordHashService } from '../../../../common/security/password-hash.service';
+import { PasswordHashService } from '../../../../shared/passwordHash/password-hash.service';
 import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
 import { Result } from '../../../../common/helpers/result/result';
@@ -26,7 +26,7 @@ export class UsersService {
 
     const inputError: ResultInputError = new ResultInputError();
 
-    if (isUserLoginExist) inputError.addErr('user already exist', 'user');
+    if (isUserLoginExist) inputError.addErr('login already exist', 'user');
     if (isUserEmailExist) inputError.addErr('email already exist', 'email');
 
     if (inputError.isExistErr()) return Result.fail(inputError);

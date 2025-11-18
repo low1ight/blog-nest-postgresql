@@ -5,5 +5,6 @@ import { EmailManager } from './email.manager';
 
 @Module({
   providers: [EmailConfig, EmailAdapter, EmailManager],
+  exports: [EmailManager],
 })
 export class EmailModule {}

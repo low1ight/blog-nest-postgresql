@@ -2,23 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { ConfigValidationUtility } from '../../core/config.validation.utility';
+import {
+  configValidationCorrectValueExample,
+  configValidationMessage,
+} from '../../core/config.validation.message';
 
 @Injectable()
 export class EmailConfig {
   @IsBoolean({
-    message:
-      'Set Env variable IS_NODEMAILER_ENABLE, example: true,false,0,1,enabled,disabled',
+    message: configValidationMessage(
+      'IS_NODEMAILER_ENABLE',
+      configValidationCorrectValueExample.boolean,
+    ),
   })
   isNodemailerEnable: boolean;
 
   @IsNotEmpty({
-    message: 'Set Env variable NODEMAILER_USER, example: qwerty@gmail.com',
+    message: configValidationMessage('NODEMAILER_USER', 'qwerty@gmail.com'),
   })
   nodemailerUser: string;
 
   @IsNotEmpty({
-    message:
-      'Set Env variable NODEMAILER_PASSWORD, example: "nzcz jyno lacy gbmq"',
+    message: configValidationMessage(
+      'NODEMAILER_PASSWORD',
+      '"nzcz jyno lacy gbmq"',
+    ),
   })
   nodemailerPassword: string;
 

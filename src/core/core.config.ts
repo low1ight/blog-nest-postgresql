@@ -2,26 +2,39 @@ import { IsBoolean, IsNotEmpty, Min } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { ConfigValidationUtility } from './config.validation.utility';
 import { Injectable } from '@nestjs/common';
+import {
+  configValidationCorrectValueExample,
+  configValidationMessage,
+} from './config.validation.message';
 
 @Injectable()
 export class CoreConfig {
-  @Min(1, { message: 'Set Env variable PORT, example: 3000' })
+  @Min(1, { message: configValidationMessage('PORT', '3000') })
   port: number;
 
-  @Min(1, { message: 'Set Env variable PG_PORT, example: 5432' })
+  @Min(1, { message: configValidationMessage('PG_PORT', '5432') })
   pgPort: number;
 
-  @IsNotEmpty({ message: 'Set Env variable PG_USER_NAME, example: "Admin"' })
+  @IsNotEmpty({
+    message: configValidationMessage('PG_USER_NAME', 'Admin'),
+  })
   pgUserName: string;
 
-  @IsNotEmpty({ message: 'Set Env variable PG_PASSWORD, example: "qwerty"' })
+  @IsNotEmpty({
+    message: configValidationMessage('PG_PASSWORD', 'qwerty'),
+  })
   pgPassword: string;
 
-  @IsNotEmpty({ message: 'Set Env variable PG_HOST, example: "localhost"' })
+  @IsNotEmpty({
+    message: configValidationMessage('PG_HOST', 'localhost'),
+  })
   pgHost: string;
 
   @IsBoolean({
-    message: 'Set Env variable INCLUDE_TESTING_MODULE, example: true,false,0,1',
+    message: configValidationMessage(
+      'INCLUDE_TESTING_MODULE',
+      configValidationCorrectValueExample.boolean,
+    ),
   })
   includeTestModule: boolean;
 

@@ -2,11 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { IsBoolean } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { ConfigValidationUtility } from '../../../../core/config.validation.utility';
+import {
+  configValidationCorrectValueExample,
+  configValidationMessage,
+} from '../../../../core/config.validation.message';
 
 @Injectable()
 export class UsersConfig {
   @IsBoolean({
-    message: 'Set Env variable IS_USER_AUTO_CONFIRMED, example: true,false,0,1',
+    message: configValidationMessage(
+      'IS_USER_AUTO_CONFIRMED',
+      configValidationCorrectValueExample.boolean,
+    ),
   })
   isUserAutoConfirmed: boolean;
 

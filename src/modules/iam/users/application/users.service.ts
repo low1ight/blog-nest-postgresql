@@ -7,10 +7,14 @@ import { UsersConfirmationRepository } from '../repositories/users-confirmation.
 import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
 import { Result } from '../../../../common/helpers/result/result';
 import { DataSource } from 'typeorm';
+import { UsersConfig } from '../config/users.config';
+import { codeGenerator } from '../../../../common/utils/code-generator';
+import { createExpirationDate } from '../../../../common/utils/create-expiration-date';
 
 @Injectable()
 export class UsersService {
   constructor(
+    private readonly userConfig: UsersConfig,
     private readonly usersRepository: UsersRepository,
     private readonly passwordHashService: PasswordHashService,
     private readonly userConfirmationRepository: UsersConfirmationRepository,
@@ -35,6 +39,9 @@ export class UsersService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
+    //generate user confirmation code
+    const confirmationCode: string = codeGenerator();
     try {
       //create user
       const userId: number = await this.usersRepository.createUser(
@@ -51,9 +58,9 @@ export class UsersService {
       await this.userConfirmationRepository.createUserConfirmation(
         {
           userId,
-          isConfirmed: false,
-          confirmationCode: null,
-          codeExpirationDate: null,
+          isConfirmed: this.userConfig.isUserAutoConfirmed,
+          confirmationCode: confirmationCode,
+          codeExpirationDate: createExpirationDate(60),
         },
         queryRunner,
       );
@@ -75,6 +82,6 @@ export class UsersService {
       await queryRunner.release();
     }
 
-    return Result.ok();
+    return Result.ok(confirmationCode);
   }
 }

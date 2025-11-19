@@ -7,6 +7,8 @@ export class EmailAdapter {
   constructor(private readonly emailConfig: EmailConfig) {}
 
   sendEmail(email: string, subject: string, html: string) {
+    if (!this.emailConfig.isNodemailerEnable) return;
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

@@ -9,4 +9,8 @@ export class PasswordHashService {
   async hash(password: string) {
     return bcrypt.hash(password, this.passwordHashConfig.saltRounds);
   }
+
+  async compare(currentPassword: string, correctHashedPassword: string) {
+    return bcrypt.compare(currentPassword, correctHashedPassword);
+  }
 }

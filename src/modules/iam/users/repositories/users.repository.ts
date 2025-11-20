@@ -43,4 +43,17 @@ export class UsersRepository {
 
     return result.length > 0;
   }
+
+  async getUserByEmailOrLogin(
+    loginOrEmail: string,
+  ): Promise<UserDocumentModel | null> {
+    const user: UserDocumentModel[] | [] = await this.dataSource.query(
+      `
+    SELECT id,login,email,password,"createdAt" FROM public.users WHERE login = $1 OR email = $1
+    `,
+      [loginOrEmail],
+    );
+
+    return user[0] || null;
+  }
 }

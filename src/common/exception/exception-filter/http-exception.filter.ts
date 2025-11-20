@@ -21,6 +21,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
       response.status(status).json({
         errorsMessages: err ?? exc,
       });
+    }
+    if (status === 401) {
+      response.status(status).json({
+        errorsMessages: 'wrong login or password',
+      });
     } else {
       response.status(status).json({
         statusCode: status,

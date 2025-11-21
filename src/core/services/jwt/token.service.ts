@@ -1,14 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { UserPayloadModel } from '../../../modules/iam/auth/types/user-payload.model';
+import { LoginUserPayloadModel } from '../../../modules/iam/auth/types/login-user-payload.model';
 import { JwtService } from '@nestjs/jwt';
+import { TokenConfig } from './token.config';
+import { JwtSignOptions } from '@nestjs/jwt';
 
 @Injectable()
 export class TokenService {
-  constructor(private jwt: JwtService) {}
+  constructor(
+    private readonly jwt: JwtService,
+    private readonly tokenConfig: TokenConfig,
+  ) {}
 
-  async createTokensPair({ id }: UserPayloadModel): Promise<TokensPair> {
-    const at = await this.jwt.signAsync({ id }, { expiresIn: '1d' });
-    const rt = await this.jwt.signAsync({ id }, { expiresIn: '1d' });
+  async createTokensPair({ id }: LoginUserPayloadModel): Promise<TokensPair> {
+    const atExpirationIn = this.tokenConfig.accessTokenExpirationTime;
+    const rtExpirationIn = this.tokenConfig.refreshTokenExpirationTime;
+    const at = await this.jwt.signAsync(
+      { id },
+      { expiresIn: (atExpirationIn + 'm') as JwtSignOptions['expiresIn'] },
+    );
+
+    const rt = await this.jwt.signAsync(
+      { id },
+      { expiresIn: (rtExpirationIn + 'd') as JwtSignOptions['expiresIn'] },
+    );
 
     return { accessToken: at, refreshToken: rt };
   }

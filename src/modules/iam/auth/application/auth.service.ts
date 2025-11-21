@@ -7,8 +7,7 @@ import { EmailService } from '../../../../core/services/email/email.service';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UserDocumentModel } from '../../users/models/user-document.model';
-import { UserPayloadModel } from '../types/user-payload.model';
-import { JwtService } from '@nestjs/jwt';
+import { LoginUserPayloadModel } from '../types/login-user-payload.model';
 import { TokenService } from '../../../../core/services/jwt/token.service';
 
 @Injectable()
@@ -32,7 +31,7 @@ export class AuthService {
     return Result.ok();
   }
 
-  async login(userPayloadModel: UserPayloadModel) {
+  async login(userPayloadModel: LoginUserPayloadModel) {
     return await this.tokenService.createTokensPair(userPayloadModel);
   }
 

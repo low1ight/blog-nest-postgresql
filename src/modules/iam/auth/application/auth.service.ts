@@ -1,20 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/application/users.service';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
-import { Result, ResultType } from '../../../../common/helpers/result/result';
-import { ResultInputError } from '../../../../common/helpers/result/result-error';
-import { EmailManager } from '../../../../shared/email/email.manager';
+import { Result, ResultType } from '../../../../core/helpers/result/result';
+import { ResultInputError } from '../../../../core/helpers/result/result-error';
+import { EmailService } from '../../../../core/services/email/email.service';
 import { UsersRepository } from '../../users/repositories/users.repository';
-import { PasswordHashService } from '../../../../shared/passwordHash/password-hash.service';
+import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UserDocumentModel } from '../../users/models/user-document.model';
+import { UserPayloadModel } from '../types/user-payload.model';
+import { JwtService } from '@nestjs/jwt';
+import { TokenService } from '../../../../core/services/jwt/token.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly emailManager: EmailManager,
+    private readonly emailManager: EmailService,
     private readonly userRepository: UsersRepository,
     private readonly passwordHashService: PasswordHashService,
+    private readonly tokenService: TokenService,
   ) {}
 
   async registration(dto: CreateUserDto) {
@@ -26,6 +30,10 @@ export class AuthService {
     this.emailManager.sendRegistrationCode(dto.email, result.content);
 
     return Result.ok();
+  }
+
+  async login(userPayloadModel: UserPayloadModel) {
+    return await this.tokenService.createTokensPair(userPayloadModel);
   }
 
   async validateUser(loginOrEmail: string, password: string) {

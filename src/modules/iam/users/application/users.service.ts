@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { ResultInputError } from '../../../../common/helpers/result/result-error';
-import { PasswordHashService } from '../../../../shared/passwordHash/password-hash.service';
+import { ResultInputError } from '../../../../core/helpers/result/result-error';
+import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
-import { Result } from '../../../../common/helpers/result/result';
+import { Result } from '../../../../core/helpers/result/result';
 import { DataSource } from 'typeorm';
 import { UsersConfig } from '../config/users.config';
-import { codeGenerator } from '../../../../common/utils/code-generator';
-import { createExpirationDate } from '../../../../common/utils/create-expiration-date';
+import { codeGenerator } from '../../../../core/utils/code-generator';
+import { createExpirationDate } from '../../../../core/utils/create-expiration-date';
 
 @Injectable()
 export class UsersService {

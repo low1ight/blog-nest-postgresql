@@ -3,7 +3,7 @@ import { UserPayloadModel } from '../../modules/iam/auth/types/user-payload.mode
 import { Request } from 'express';
 
 export const CurrentUser = createParamDecorator(
-  (ctx: ExecutionContext): UserPayloadModel => {
+  (data: unknown, ctx: ExecutionContext): UserPayloadModel => {
     const request: Request = ctx.switchToHttp().getRequest();
     const user: UserPayloadModel = request?.user as UserPayloadModel;
 

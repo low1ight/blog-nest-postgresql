@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Min } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
-import { ConfigValidationUtility } from '../../core/config.validation.utility';
-import { configValidationMessage } from '../../core/config.validation.message';
+import { ConfigValidationUtility } from '../../config/config.validation.utility';
+import { configValidationMessage } from '../../config/config.validation.message';
 
 @Injectable()
 export class PasswordHashConfig {

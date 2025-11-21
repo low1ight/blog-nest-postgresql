@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
-import { ConfigValidationUtility } from '../../core/config.validation.utility';
+import { ConfigValidationUtility } from '../../config/config.validation.utility';
 import {
   configValidationCorrectValueExample,
   configValidationMessage,
-} from '../../core/config.validation.message';
+} from '../../config/config.validation.message';
 
 @Injectable()
 export class EmailConfig {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EmailAdapter } from './email.adapter';
 
 @Injectable()
-export class EmailManager {
+export class EmailService {
   constructor(private readonly emailAdapter: EmailAdapter) {}
 
   sendRegistrationCode(email: string, code: string) {

@@ -4,10 +4,10 @@ import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { ResultInputError } from '../../../../core/helpers/result/result-error';
 import { ResultType } from '../../../../core/helpers/result/result';
 import { throwExceptionFromCustomErr } from '../../../../core/exception/throw-exception-from-custom-err';
-import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../../../../core/decorators/current-user.param.decorator';
-import type { UserPayloadModel } from '../types/user-payload.model';
+import type { LoginUserPayloadModel } from '../types/login-user-payload.model';
 import type { Response } from 'express';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -26,10 +26,10 @@ export class AuthController {
     throwExceptionFromCustomErr(result.error);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @CurrentUser() user: UserPayloadModel,
+    @CurrentUser() user: LoginUserPayloadModel,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.login(user);

@@ -23,8 +23,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
     if (status === 401) {
+      const err = exc['message'] as string;
       response.status(status).json({
-        errorsMessages: 'wrong login or password',
+        errorsMessages: err,
       });
     } else {
       response.status(status).json({

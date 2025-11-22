@@ -18,7 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   ): Promise<LoginUserPayloadModel> {
     const user = await this.authService.validateUser(username, password);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Wrong login or password');
     }
     return { id: user.id };
   }

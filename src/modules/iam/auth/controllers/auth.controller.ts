@@ -7,14 +7,18 @@ import { throwExceptionFromCustomErr } from '../../../../core/exception/throw-ex
 import { CurrentUser } from '../../../../core/decorators/current-user.param.decorator';
 import type { LoginUserPayloadModel } from '../types/login-user-payload.model';
 import type { Response } from 'express';
-import { LocalAuthGuard } from '../guards/local-auth.guard';
+import { LocalAuthGuard } from '../../../../core/guards/local-auth.guard';
+import { JwtAccessAuthGuard } from '../../../../core/guards/jwt-access-auth.guard';
+import { AtUser } from '../../../../core/decorators/acess-token-user.param.decorator';
+import type { AccessTokenPayloadModel } from '../types/access-token-payload.model';
+import { UsersQueryRepository } from '../../users/repositories/users.query.repository';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
-
-  @Get()
-  getUser() {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userQueryRepository: UsersQueryRepository,
+  ) {}
 
   @Post('registration')
   async registration(@Body() dto: CreateUserDto) {
@@ -37,5 +41,11 @@ export class AuthController {
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
     return { accessToken };
+  }
+
+  @UseGuards(JwtAccessAuthGuard)
+  @Get('me')
+  async me(@AtUser() { id }: AccessTokenPayloadModel) {
+    return this.userQueryRepository.getUserMe(id);
   }
 }

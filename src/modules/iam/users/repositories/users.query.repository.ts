@@ -17,8 +17,6 @@ export class UsersQueryRepository {
       [userId],
     );
 
-    console.log(result);
-
     return result[0] && new UserMeViewModel(result[0]);
   }
 }

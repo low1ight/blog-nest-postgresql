@@ -5,11 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/iam/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as process from 'node:process';
 import { CoreConfig } from './core/config/core.config';
 import { TestingModule } from './modules/testing/testing.module';
-
-console.log(process.env.PG_PORT);
 
 @Module({
   imports: [CoreModule, configModule],

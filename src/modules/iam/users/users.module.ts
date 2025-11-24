@@ -5,8 +5,15 @@ import { UsersConfirmationRepository } from './repositories/users-confirmation.r
 import { UsersPasswordRecoveryRepository } from './repositories/users-password-recovery.repository';
 import { UsersConfig } from './config/users.config';
 import { UsersQueryRepository } from './repositories/users.query.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entites/user.entity';
+import { UserPasswordRecovery } from './entites/user-password-recovery.entity';
+import { UserConfirmation } from './entites/user-confirmation.entity';
 
 @Module({
+  imports: [
+    TypeOrmModule.forFeature([User, UserPasswordRecovery, UserConfirmation]),
+  ],
   providers: [
     UsersConfig,
     UsersService,

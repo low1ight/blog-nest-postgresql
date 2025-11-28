@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { LoginUserPayloadModel } from '../../../modules/iam/auth/types/login-user-payload.model';
+import { LoginUserPayloadModel } from '../../dto/login-user-payload.model';
 import { JwtService } from '@nestjs/jwt';
 import { TokenConfig } from './token.config';
 import { JwtSignOptions } from '@nestjs/jwt';

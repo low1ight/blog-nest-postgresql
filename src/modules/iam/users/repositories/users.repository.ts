@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, QueryRunner } from 'typeorm';
-import { UserDocumentModel } from '../models/user-document.model';
-import { UserInputModel } from '../models/user-input.model';
+import { UserDocumentModel } from '../dto/user-document.model';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 @Injectable()
 export class UsersRepository {
   constructor(@InjectDataSource() protected dataSource: DataSource) {}
 
   async createUser(
-    { login, email, createdAt, password }: UserInputModel,
+    { login, email, createdAt, password }: CreateUserDto,
     transactionQueryRunner: QueryRunner,
   ): Promise<number> {
     const result = (await transactionQueryRunner.query(

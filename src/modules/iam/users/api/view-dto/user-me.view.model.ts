@@ -1,4 +1,4 @@
-import { UserDocumentModel } from '../user-document.model';
+import { UserDocumentModel } from '../../dto/user-document.model';
 
 export class UserMeViewModel {
   id: number;

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { UserDocumentModel } from '../models/user-document.model';
-import { UserMeViewModel } from '../models/view/user-me.view.model';
+import { UserDocumentModel } from '../dto/user-document.model';
+import { UserMeViewModel } from '../api/view-dto/user-me.view.model';
 
 @Injectable()
 export class UsersQueryRepository {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { CreateUserDto } from '../api/input-dto/create-user.dto';
 import { ResultInputError } from '../../../../core/helpers/result/result-error';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';

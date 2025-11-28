@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { LoginUserPayloadModel } from '../../modules/iam/auth/types/login-user-payload.model';
+import { LoginUserPayloadModel } from '../dto/login-user-payload.model';
 import { Request } from 'express';
-import { AccessTokenPayloadModel } from '../../modules/iam/auth/types/access-token-payload.model';
+import { AccessTokenPayloadModel } from '../dto/access-token-payload.model';
 
 export const AtUser = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): AccessTokenPayloadModel => {

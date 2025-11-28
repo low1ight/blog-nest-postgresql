@@ -6,9 +6,9 @@ import { UsersPasswordRecoveryRepository } from './repositories/users-password-r
 import { UsersConfig } from './config/users.config';
 import { UsersQueryRepository } from './repositories/users.query.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './entites/user.entity';
-import { UserPasswordRecovery } from './entites/user-password-recovery.entity';
-import { UserConfirmation } from './entites/user-confirmation.entity';
+import { User } from './domain/user.entity';
+import { UserPasswordRecovery } from './domain/user-password-recovery.entity';
+import { UserConfirmation } from './domain/user-confirmation.entity';
 
 @Module({
   imports: [

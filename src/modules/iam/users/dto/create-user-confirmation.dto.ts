@@ -1,4 +1,4 @@
-export type UserConfirmationInputModel = {
+export type CreateUserConfirmationDto = {
   userId: number;
   isConfirmed: boolean;
   confirmationCode: string | null;

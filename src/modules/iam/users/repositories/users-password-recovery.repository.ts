@@ -1,17 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner } from 'typeorm';
-import { UserPasswordRecoveryInputModel } from '../models/user-password-recovery-input.model';
+import { QueryRunner } from 'typeorm';
+import { CreateUserPasswordRecoveryDto } from '../dto/create-user-password-recovery.dto';
 
 @Injectable()
 export class UsersPasswordRecoveryRepository {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor() {}
 
   async createPasswordRecoveryForUser(
-    {
-      userId,
-      recoveryCode,
-      codeExpirationDate,
-    }: UserPasswordRecoveryInputModel,
+    { userId, recoveryCode, codeExpirationDate }: CreateUserPasswordRecoveryDto,
     transactionQueryRunner: QueryRunner,
   ) {
     await transactionQueryRunner.query(

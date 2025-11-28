@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserConfirmationInputModel } from '../models/user-confirmation-input.model';
-import { DataSource, QueryRunner } from 'typeorm';
+import { CreateUserConfirmationDto } from '../dto/create-user-confirmation.dto';
+import { QueryRunner } from 'typeorm';
 
 @Injectable()
 export class UsersConfirmationRepository {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor() {}
 
   async createUserConfirmation(
     {
@@ -12,7 +12,7 @@ export class UsersConfirmationRepository {
       isConfirmed,
       confirmationCode,
       codeExpirationDate,
-    }: UserConfirmationInputModel,
+    }: CreateUserConfirmationDto,
     transactionQueryRunner: QueryRunner,
   ) {
     await transactionQueryRunner.query(

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/application/users.service';
-import { CreateUserDto } from '../../users/dto/create-user.dto';
+import { CreateUserDto } from '../../users/api/input-dto/create-user.dto';
 import { Result, ResultType } from '../../../../core/helpers/result/result';
 import { ResultInputError } from '../../../../core/helpers/result/result-error';
 import { EmailService } from '../../../../core/services/email/email.service';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
-import { UserDocumentModel } from '../../users/models/user-document.model';
-import { LoginUserPayloadModel } from '../types/login-user-payload.model';
+import { UserDocumentModel } from '../../users/dto/user-document.model';
+import { LoginUserPayloadModel } from '../../../../core/dto/login-user-payload.model';
 import { TokenService } from '../../../../core/services/jwt/token.service';
 
 @Injectable()

@@ -7,8 +7,9 @@ import { EmailService } from '../../../../core/services/email/email.service';
 import { UsersRepository } from '../../users/repositories/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UserDocumentModel } from '../../users/dto/user-document.model';
-import { LoginUserPayloadModel } from '../../../../core/dto/login-user-payload.model';
+import { UserLoginModel } from '../../../../core/dto/user-login.model';
 import { TokenService } from '../../../../core/services/jwt/token.service';
+import { DevicesService } from '../../devices/application/devices.service';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     private readonly userRepository: UsersRepository,
     private readonly passwordHashService: PasswordHashService,
     private readonly tokenService: TokenService,
+    private readonly deviceService: DevicesService,
   ) {}
 
   async registration(dto: CreateUserDto) {
@@ -31,8 +33,14 @@ export class AuthService {
     return Result.ok();
   }
 
-  async login(userPayloadModel: LoginUserPayloadModel) {
-    return await this.tokenService.createTokensPair(userPayloadModel);
+  async login(user: UserLoginModel, ip: string, userAgent: string) {
+    const { id, sessionId } = await this.deviceService.createDevice(
+      ip,
+      userAgent,
+      user.id,
+    );
+
+    return await this.tokenService.createTokensPair(user, id, sessionId);
   }
 
   async validateUser(loginOrEmail: string, password: string) {
@@ -41,7 +49,7 @@ export class AuthService {
 
     if (!user) return null;
 
-    const isPasswordMatch = await this.passwordHashService.compare(
+    const isPasswordMatch: boolean = await this.passwordHashService.compare(
       password,
       user.password,
     );

@@ -1,6 +1,13 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserPasswordRecovery } from './user-password-recovery.entity';
 import { UserConfirmation } from './user-confirmation.entity';
+import { Device } from '../../devices/domain/device.entity';
 
 @Entity('users')
 export class User {
@@ -16,7 +23,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: 'timestamptz' }) // Recommended
+  @Column({ type: 'timestamptz' })
   createdAt: Date;
 
   @OneToOne(
@@ -30,4 +37,7 @@ export class User {
     (userConfirmation) => userConfirmation.userId,
   )
   confirmation: UserConfirmation;
+
+  @OneToMany(() => Device, (device) => device.user)
+  devices: Device[];
 }

@@ -5,9 +5,10 @@ import { UsersModule } from '../users/users.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { DevicesModule } from '../devices/devices.module';
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, DevicesModule],
   controllers: [AuthController],
   providers: [
     AuthService,

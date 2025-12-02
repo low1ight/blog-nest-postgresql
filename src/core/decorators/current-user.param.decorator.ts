@@ -1,11 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { LoginUserPayloadModel } from '../dto/login-user-payload.model';
+import { UserLoginModel } from '../dto/user-login.model';
 import { Request } from 'express';
 
 export const CurrentUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): LoginUserPayloadModel => {
+  (data: unknown, ctx: ExecutionContext): UserLoginModel => {
     const request: Request = ctx.switchToHttp().getRequest();
-    const user: LoginUserPayloadModel = request?.user as LoginUserPayloadModel;
+    const user: UserLoginModel = request?.user as UserLoginModel;
 
     if (!user) throw Error('User not found! Set local auth guard!');
 

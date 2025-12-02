@@ -7,6 +7,8 @@ import { AuthModule } from './modules/iam/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreConfig } from './core/config/core.config';
 import { TestingModule } from './modules/testing/testing.module';
+import { UsersModule } from './modules/iam/users/users.module';
+import { DevicesModule } from './modules/iam/devices/devices.module';
 
 @Module({
   imports: [CoreModule, configModule],
@@ -17,6 +19,8 @@ export class AppModule {
   static forRoot(coreConfig: CoreConfig): DynamicModule {
     const modules: any[] = [
       AuthModule,
+      UsersModule,
+      DevicesModule,
       TypeOrmModule.forRootAsync({
         imports: [CoreModule],
         useFactory: (coreConfig: CoreConfig) => ({

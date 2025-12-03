@@ -24,7 +24,7 @@ export class AuthService {
 
   async registration(dto: CreateUserDto) {
     const result: ResultType<string, ResultInputError> =
-      await this.usersService.creatUser(dto);
+      await this.usersService.createUser(dto);
 
     if (!result.isSuccessful) return result;
 

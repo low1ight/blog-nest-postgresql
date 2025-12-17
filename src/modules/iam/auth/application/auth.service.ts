@@ -43,6 +43,10 @@ export class AuthService {
     return await this.tokenService.createTokensPair(user, id, sessionId);
   }
 
+  async logout(deviceId: number) {
+    return await this.deviceService.deleteDeviceById(deviceId);
+  }
+
   async validateUser(loginOrEmail: string, password: string) {
     const user: UserDocumentModel | null =
       await this.userRepository.getUserByEmailOrLogin(loginOrEmail);

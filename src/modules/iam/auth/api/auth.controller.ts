@@ -19,7 +19,10 @@ import { LocalAuthGuard } from '../../../../core/guards/local-auth.guard';
 import { JwtAccessAuthGuard } from '../../../../core/guards/jwt-access-auth.guard';
 import { AtUser } from '../../../../core/decorators/acess-token-user.param.decorator';
 import type { AccessTokenPayloadModel } from '../../../../core/dto/access-token-payload.model';
+import type { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
 import { UsersQueryRepository } from '../../users/repositories/users.query.repository';
+import { JwtRefreshAuthGuard } from '../../../../core/guards/jwt-refresh-auth.guard';
+import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -59,9 +62,16 @@ export class AuthController {
     return { accessToken };
   }
 
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('logout')
+  async logout(@RtUser() user: RefreshTokenPayloadModel) {
+    return this.authService.logout(user.deviceId);
+  }
+
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
-  async me(@AtUser() { id }: AccessTokenPayloadModel) {
+  async me(@Req() req: Request, @AtUser() { id }: AccessTokenPayloadModel) {
+    console.log(req);
     return this.userQueryRepository.getUserMe(id);
   }
 }

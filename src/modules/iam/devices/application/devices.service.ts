@@ -18,4 +18,12 @@ export class DevicesService {
 
     return await this.deviceRepository.createDevice(dto);
   }
+
+  async getDeviceById(deviceId: number) {
+    return this.deviceRepository.getDeviceById(deviceId);
+  }
+
+  async deleteDeviceById(deviceId: number) {
+    return this.deviceRepository.deleteDeviceById(deviceId);
+  }
 }

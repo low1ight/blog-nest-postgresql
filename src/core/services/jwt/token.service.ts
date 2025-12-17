@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UserLoginModel } from '../../dto/user-login.model';
 import { JwtService } from '@nestjs/jwt';
 import { TokenConfig } from './token.config';
 import { JwtSignOptions } from '@nestjs/jwt';
@@ -12,7 +11,7 @@ export class TokenService {
   ) {}
 
   async createTokensPair(
-    { id }: UserLoginModel,
+    userId: number,
     deviceId: number,
     sessionId: string,
   ): Promise<TokensPair> {
@@ -20,12 +19,12 @@ export class TokenService {
     const rtExpirationIn = this.tokenConfig.refreshTokenExpirationTime;
 
     const at = await this.jwt.signAsync(
-      { id },
+      { id: userId },
       { expiresIn: (atExpirationIn + 'm') as JwtSignOptions['expiresIn'] },
     );
 
     const rt = await this.jwt.signAsync(
-      { id, deviceId, sessionId },
+      { id: userId, deviceId, sessionId },
       { expiresIn: (rtExpirationIn + 'd') as JwtSignOptions['expiresIn'] },
     );
 

@@ -90,5 +90,7 @@ export class AuthService {
       recoveryCode,
       expirationDate,
     );
+
+    this.emailManager.sendPasswordRecoveryCode(email, recoveryCode);
   }
 }

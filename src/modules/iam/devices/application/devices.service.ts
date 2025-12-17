@@ -19,6 +19,18 @@ export class DevicesService {
     return await this.deviceRepository.createDevice(dto);
   }
 
+  async updateDevice(
+    deviceId: number,
+    sessionId: string,
+    lastActiveDate: string,
+  ) {
+    await this.deviceRepository.updateDevice(
+      deviceId,
+      sessionId,
+      lastActiveDate,
+    );
+  }
+
   async getDeviceById(deviceId: number) {
     return this.deviceRepository.getDeviceById(deviceId);
   }

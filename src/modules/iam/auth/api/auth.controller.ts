@@ -68,6 +68,22 @@ export class AuthController {
     return this.authService.logout(user.deviceId);
   }
 
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('refresh-token')
+  async refreshToken(
+    @RtUser() user: RefreshTokenPayloadModel,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.authService.refreshToken(
+      user.id,
+      user.deviceId,
+    );
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+
+    return { accessToken };
+  }
+
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
   async me(@Req() req: Request, @AtUser() { id }: AccessTokenPayloadModel) {

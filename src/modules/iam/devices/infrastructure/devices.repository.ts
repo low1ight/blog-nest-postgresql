@@ -38,6 +38,21 @@ export class DevicesRepository {
     return device[0] || null;
   }
 
+  async updateDevice(
+    deviceId: number,
+    sessionId: string,
+    lastActiveDate: string,
+  ): Promise<void> {
+    await this.dataSource.query(
+      `
+    UPDATE public.devices
+    SET "sessionId"=$2, "lastActiveDate"=$3
+     WHERE id=$1;
+    `,
+      [deviceId, sessionId, lastActiveDate],
+    );
+  }
+
   async deleteDeviceById(id: number): Promise<void> {
     await this.dataSource.query(
       `

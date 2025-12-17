@@ -10,6 +10,7 @@ import { UserDocumentModel } from '../../users/dto/user-document.model';
 import { UserLoginModel } from '../../../../core/dto/user-login.model';
 import { TokenService } from '../../../../core/services/jwt/token.service';
 import { DevicesService } from '../../devices/application/devices.service';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -40,11 +41,23 @@ export class AuthService {
       user.id,
     );
 
-    return await this.tokenService.createTokensPair(user, id, sessionId);
+    return await this.tokenService.createTokensPair(user.id, id, sessionId);
   }
 
   async logout(deviceId: number) {
     return await this.deviceService.deleteDeviceById(deviceId);
+  }
+
+  async refreshToken(userId: number, deviceId: number) {
+    const sessionId: string = randomUUID();
+    const date = new Date().toISOString();
+
+    await this.deviceService.updateDevice(deviceId, sessionId, date);
+    return await this.tokenService.createTokensPair(
+      userId,
+      deviceId,
+      sessionId,
+    );
   }
 
   async validateUser(loginOrEmail: string, password: string) {

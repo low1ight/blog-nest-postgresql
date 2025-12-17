@@ -56,4 +56,15 @@ export class UsersRepository {
 
     return user[0] || null;
   }
+
+  async getUserById(userId: number): Promise<UserDocumentModel | null> {
+    const user: UserDocumentModel[] | [] = await this.dataSource.query(
+      `
+    SELECT id,login,email,password,"createdAt" FROM public.users WHERE id = $1 
+    `,
+      [userId],
+    );
+
+    return user[0] || null;
+  }
 }

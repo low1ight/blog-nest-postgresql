@@ -4,13 +4,14 @@ import { CreateUserDto } from '../../users/api/input-dto/create-user.dto';
 import { Result, ResultType } from '../../../../core/helpers/result/result';
 import { ResultInputError } from '../../../../core/helpers/result/result-error';
 import { EmailService } from '../../../../core/services/email/email.service';
-import { UsersRepository } from '../../users/repositories/users.repository';
+import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UserDocumentModel } from '../../users/dto/user-document.model';
 import { UserLoginModel } from '../../../../core/dto/user-login.model';
 import { TokenService } from '../../../../core/services/jwt/token.service';
 import { DevicesService } from '../../devices/application/devices.service';
 import { randomUUID } from 'crypto';
+import { createExpirationDate } from '../../../../core/utils/create-expiration-date';
 
 @Injectable()
 export class AuthService {
@@ -74,5 +75,20 @@ export class AuthService {
     if (!isPasswordMatch) return null;
 
     return user;
+  }
+
+  async passwordRecovery(email: string) {
+    const user = await this.usersService.getUserByEmailOrLogin(email);
+    if (!user) return;
+
+    const recoveryCode: string = randomUUID();
+    //todo add recovery code time env
+    const expirationDate = createExpirationDate(15);
+
+    await this.usersService.setPasswordRecoveryCode(
+      user.id,
+      recoveryCode,
+      expirationDate,
+    );
   }
 }

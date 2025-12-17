@@ -20,9 +20,10 @@ import { JwtAccessAuthGuard } from '../../../../core/guards/jwt-access-auth.guar
 import { AtUser } from '../../../../core/decorators/acess-token-user.param.decorator';
 import type { AccessTokenPayloadModel } from '../../../../core/dto/access-token-payload.model';
 import type { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
-import { UsersQueryRepository } from '../../users/repositories/users.query.repository';
+import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
 import { JwtRefreshAuthGuard } from '../../../../core/guards/jwt-refresh-auth.guard';
 import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
+import { PasswordRecoveryDto } from './input-dto/password-recovery.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -87,7 +88,11 @@ export class AuthController {
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
   async me(@Req() req: Request, @AtUser() { id }: AccessTokenPayloadModel) {
-    console.log(req);
     return this.userQueryRepository.getUserMe(id);
+  }
+
+  @Post('password-recovery')
+  async passwordRecovery(@Body() { email }: PasswordRecoveryDto) {
+    return this.authService.passwordRecovery(email);
   }
 }

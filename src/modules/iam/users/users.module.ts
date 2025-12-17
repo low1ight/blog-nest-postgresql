@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './application/users.service';
-import { UsersRepository } from './repositories/users.repository';
-import { UsersConfirmationRepository } from './repositories/users-confirmation.repository';
-import { UsersPasswordRecoveryRepository } from './repositories/users-password-recovery.repository';
+import { UsersRepository } from './infrastructure/users.repository';
+import { UsersConfirmationRepository } from './infrastructure/users-confirmation.repository';
+import { UsersPasswordRecoveryRepository } from './infrastructure/users-password-recovery.repository';
 import { UsersConfig } from './config/users.config';
-import { UsersQueryRepository } from './repositories/users.query.repository';
+import { UsersQueryRepository } from './infrastructure/users.query.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './domain/user.entity';
 import { UserPasswordRecovery } from './domain/user-password-recovery.entity';

@@ -6,6 +6,7 @@ import { DevicesRepository } from './infrastructure/devices.repository';
 import { DevicesController } from './api/devices.controller';
 import { DevicesQueryRepository } from './infrastructure/devices.query.repository';
 import { TerminateAllOtherDevices } from './application/use-cases/terminate-all-other-devices.use-case';
+import { TerminateSpecifiedDevice } from './application/use-cases/terminate-specified-device.use-case';
 
 @Module({
   controllers: [DevicesController],
@@ -15,6 +16,7 @@ import { TerminateAllOtherDevices } from './application/use-cases/terminate-all-
     DevicesRepository,
     DevicesQueryRepository,
     TerminateAllOtherDevices,
+    TerminateSpecifiedDevice,
   ],
   exports: [DevicesService, DevicesRepository],
 })

@@ -28,6 +28,8 @@ import { NewPasswordDto } from './input-dto/new-password.dto';
 import { UserMeViewModel } from '../../users/api/view-dto/user-me.view.model';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from '../application/use-cases/registration-use-case';
+import { LoginCommand } from '../application/use-cases/login-use-case';
+import { TokensPair } from '../../../../core/services/jwt/token.service';
 
 @Controller('auth')
 export class AuthController {
@@ -57,11 +59,8 @@ export class AuthController {
     const ip = req.ip || 'unknown';
     const userAgent = req.get('User-Agent') || 'unknown';
 
-    const { accessToken, refreshToken } = await this.authService.login(
-      user,
-      ip,
-      userAgent,
-    );
+    const { accessToken, refreshToken }: TokensPair =
+      await this.commandBus.execute(new LoginCommand(user, ip, userAgent));
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 

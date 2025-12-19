@@ -22,16 +22,6 @@ export class AuthService {
     private readonly deviceService: DevicesService,
   ) {}
 
-  async login(user: UserLoginModel, ip: string, userAgent: string) {
-    const { id, sessionId } = await this.deviceService.createDevice(
-      ip,
-      userAgent,
-      user.id,
-    );
-
-    return await this.tokenService.createTokensPair(user.id, id, sessionId);
-  }
-
   async logout(deviceId: number) {
     return await this.deviceService.deleteDeviceById(deviceId);
   }

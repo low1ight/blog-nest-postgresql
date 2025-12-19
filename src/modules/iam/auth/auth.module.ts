@@ -8,6 +8,7 @@ import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { DevicesModule } from '../devices/devices.module';
 import { Registration } from './application/use-cases/registration-use-case';
 import { Login } from './application/use-cases/login-use-case';
+import { Logout } from './application/use-cases/logout-use-case';
 
 @Module({
   imports: [UsersModule, DevicesModule],
@@ -19,6 +20,7 @@ import { Login } from './application/use-cases/login-use-case';
     JwtRefreshStrategy,
     Registration,
     Login,
+    Logout,
   ],
 })
 export class AuthModule {}

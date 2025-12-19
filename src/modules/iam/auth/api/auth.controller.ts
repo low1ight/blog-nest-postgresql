@@ -18,11 +18,11 @@ import type { Response, Request } from 'express';
 import { LocalAuthGuard } from '../../../../core/guards/local-auth.guard';
 import { JwtAccessAuthGuard } from '../../../../core/guards/jwt-access-auth.guard';
 import { AtUser } from '../../../../core/decorators/acess-token-user.param.decorator';
+import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
 import type { AccessTokenPayloadModel } from '../../../../core/dto/access-token-payload.model';
 import type { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
 import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
 import { JwtRefreshAuthGuard } from '../../../../core/guards/jwt-refresh-auth.guard';
-import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
 import { PasswordRecoveryDto } from './input-dto/password-recovery.dto';
 import { NewPasswordDto } from './input-dto/new-password.dto';
 import { UserMeViewModel } from '../../users/api/view-dto/user-me.view.model';
@@ -30,6 +30,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from '../application/use-cases/registration-use-case';
 import { LoginCommand } from '../application/use-cases/login-use-case';
 import { TokensPair } from '../../../../core/services/jwt/token.service';
+import { LogoutCommand } from '../application/use-cases/logout-use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -70,7 +71,8 @@ export class AuthController {
   @UseGuards(JwtRefreshAuthGuard)
   @Post('logout')
   async logout(@RtUser() user: RefreshTokenPayloadModel) {
-    return this.authService.logout(user.deviceId);
+    await this.commandBus.execute(new LogoutCommand(user.deviceId));
+    return;
   }
 
   @UseGuards(JwtRefreshAuthGuard)
@@ -92,7 +94,6 @@ export class AuthController {
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
   async me(
-    @Req() req: Request,
     @AtUser() { id }: AccessTokenPayloadModel,
   ): Promise<UserMeViewModel> {
     return this.userQueryRepository.getUserMe(id);

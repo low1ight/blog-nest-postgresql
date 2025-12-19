@@ -9,6 +9,7 @@ import { CoreConfig } from './core/config/core.config';
 import { TestingModule } from './modules/testing/testing.module';
 import { UsersModule } from './modules/iam/users/users.module';
 import { DevicesModule } from './modules/iam/devices/devices.module';
+import { CqrsModule } from '@nestjs/cqrs';
 
 @Module({
   imports: [CoreModule, configModule],
@@ -18,6 +19,7 @@ import { DevicesModule } from './modules/iam/devices/devices.module';
 export class AppModule {
   static forRoot(coreConfig: CoreConfig): DynamicModule {
     const modules: any[] = [
+      CqrsModule.forRoot(),
       AuthModule,
       UsersModule,
       DevicesModule,

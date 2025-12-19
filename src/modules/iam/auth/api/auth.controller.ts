@@ -29,12 +29,12 @@ import { PasswordRecoveryDto } from './input-dto/password-recovery.dto';
 import { NewPasswordDto } from './input-dto/new-password.dto';
 import { UserMeViewModel } from '../../users/api/view-dto/user-me.view.model';
 import { CommandBus } from '@nestjs/cqrs';
-import { RegistrationCommand } from '../application/use-cases/registration-use-case';
-import { LoginCommand } from '../application/use-cases/login-use-case';
+import { RegistrationCommand } from '../application/use-cases/registration.use-case';
+import { LoginCommand } from '../application/use-cases/login.use-case';
 import { TokensPair } from '../../../../core/services/jwt/token.service';
-import { LogoutCommand } from '../application/use-cases/logout-use-case';
-import { RefreshTokenCommand } from '../application/use-cases/refreshToken-use-case';
-import { PasswordRecoveryCommand } from '../application/use-cases/passwordRecovery-use-case';
+import { LogoutCommand } from '../application/use-cases/logout.use-case';
+import { RefreshTokenCommand } from '../application/use-cases/refresh-token.use-case';
+import { PasswordRecoveryCommand } from '../application/use-cases/password-recovery.use-case';
 import { SetNewPasswordCommand } from '../application/use-cases/set-new-password.use-case';
 
 @Controller('auth')

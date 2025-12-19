@@ -24,18 +24,23 @@ import { UsersQueryRepository } from '../../users/infrastructure/users.query.rep
 import { JwtRefreshAuthGuard } from '../../../../core/guards/jwt-refresh-auth.guard';
 import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
 import { PasswordRecoveryDto } from './input-dto/password-recovery.dto';
+import { NewPasswordDto } from './input-dto/new-password.dto';
+import { UserMeViewModel } from '../../users/api/view-dto/user-me.view.model';
+import { CommandBus } from '@nestjs/cqrs';
+import { RegistrationCommand } from '../application/use-cases/registration-use-case';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userQueryRepository: UsersQueryRepository,
+    private readonly commandBus: CommandBus,
   ) {}
 
   @Post('registration')
   async registration(@Body() dto: CreateUserDto) {
     const result: ResultType<null, ResultInputError> =
-      await this.authService.registration(dto);
+      await this.commandBus.execute(new RegistrationCommand(dto));
 
     if (result.isSuccessful) return result.content;
 
@@ -87,12 +92,20 @@ export class AuthController {
 
   @UseGuards(JwtAccessAuthGuard)
   @Get('me')
-  async me(@Req() req: Request, @AtUser() { id }: AccessTokenPayloadModel) {
+  async me(
+    @Req() req: Request,
+    @AtUser() { id }: AccessTokenPayloadModel,
+  ): Promise<UserMeViewModel> {
     return this.userQueryRepository.getUserMe(id);
   }
 
   @Post('password-recovery')
   async passwordRecovery(@Body() { email }: PasswordRecoveryDto) {
     return this.authService.passwordRecovery(email);
+  }
+
+  @Post('new-password')
+  async newPassword(@Body() dto: NewPasswordDto) {
+    return this.authService.setNewPassword(dto);
   }
 }

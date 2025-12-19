@@ -1,8 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/application/users.service';
-import { CreateUserDto } from '../../users/api/input-dto/create-user.dto';
-import { Result, ResultType } from '../../../../core/helpers/result/result';
-import { ResultInputError } from '../../../../core/helpers/result/result-error';
 import { EmailService } from '../../../../core/services/email/email.service';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
@@ -12,6 +9,7 @@ import { TokenService } from '../../../../core/services/jwt/token.service';
 import { DevicesService } from '../../devices/application/devices.service';
 import { randomUUID } from 'crypto';
 import { createExpirationDate } from '../../../../core/utils/create-expiration-date';
+import { NewPasswordDto } from '../api/input-dto/new-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,17 +21,6 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly deviceService: DevicesService,
   ) {}
-
-  async registration(dto: CreateUserDto) {
-    const result: ResultType<string, ResultInputError> =
-      await this.usersService.createUser(dto);
-
-    if (!result.isSuccessful) return result;
-
-    this.emailManager.sendRegistrationCode(dto.email, result.content);
-
-    return Result.ok();
-  }
 
   async login(user: UserLoginModel, ip: string, userAgent: string) {
     const { id, sessionId } = await this.deviceService.createDevice(
@@ -92,5 +79,9 @@ export class AuthService {
     );
 
     this.emailManager.sendPasswordRecoveryCode(email, recoveryCode);
+  }
+
+  async setNewPassword(dto: NewPasswordDto) {
+    return await this.usersService.setNewPassword(dto);
   }
 }

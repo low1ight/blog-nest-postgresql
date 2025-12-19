@@ -57,6 +57,16 @@ export class UsersRepository {
     return user[0] || null;
   }
 
+  async updateUserPasswordById(id: number, password: string) {
+    await this.dataSource.query(
+      `
+    UPDATE public.users
+    SET "password"=$2
+    WHERE "id"=$1`,
+      [id, password],
+    );
+  }
+
   async getUserById(userId: number): Promise<UserDocumentModel | null> {
     const user: UserDocumentModel[] | [] = await this.dataSource.query(
       `

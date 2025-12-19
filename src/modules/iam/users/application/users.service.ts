@@ -1,87 +1,53 @@
 import { Injectable } from '@nestjs/common';
-import { UsersRepository } from '../repositories/users.repository';
-import { CreateUserDto } from '../api/input-dto/create-user.dto';
-import { ResultInputError } from '../../../../core/helpers/result/result-error';
+import { UsersRepository } from '../infrastructure/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
-import { UsersConfirmationRepository } from '../repositories/users-confirmation.repository';
-import { UsersPasswordRecoveryRepository } from '../repositories/users-password-recovery.repository';
-import { Result } from '../../../../core/helpers/result/result';
-import { DataSource } from 'typeorm';
-import { UsersConfig } from '../config/users.config';
-import { codeGenerator } from '../../../../core/utils/code-generator';
-import { createExpirationDate } from '../../../../core/utils/create-expiration-date';
+import { UsersPasswordRecoveryRepository } from '../infrastructure/users-password-recovery.repository';
+import { NewPasswordDto } from '../../auth/api/input-dto/new-password.dto';
+import { UserPasswordRecovery } from '../domain/user-password-recovery.entity';
+import { isDateExpired } from '../../../../core/utils/is-date-expired';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private readonly userConfig: UsersConfig,
     private readonly usersRepository: UsersRepository,
     private readonly passwordHashService: PasswordHashService,
-    private readonly userConfirmationRepository: UsersConfirmationRepository,
     private readonly userPasswordRecoveryRepository: UsersPasswordRecoveryRepository,
-    private readonly dataSource: DataSource,
   ) {}
 
-  async creatUser({ login, password, email }: CreateUserDto) {
-    const isUserLoginExist =
-      await this.usersRepository.isUserExistByLogin(login);
-    const isUserEmailExist =
-      await this.usersRepository.isUserExistByEmail(email);
+  async getUserByEmailOrLogin(email: string) {
+    return await this.usersRepository.getUserByEmailOrLogin(email);
+  }
 
-    const inputError: ResultInputError = new ResultInputError();
+  async setNewPassword({
+    newPassword,
+    recoveryCode,
+  }: NewPasswordDto): Promise<boolean> {
+    const userPasswordRecovery: UserPasswordRecovery | null =
+      await this.userPasswordRecoveryRepository.getByRecoveryCode(recoveryCode);
 
-    if (isUserLoginExist) inputError.addErr('login already exist', 'user');
-    if (isUserEmailExist) inputError.addErr('email already exist', 'email');
+    if (!userPasswordRecovery) return false;
 
-    if (inputError.isExistErr()) return Result.fail(inputError);
+    if (isDateExpired(userPasswordRecovery.codeExpirationDate)) return false;
 
-    //create transaction
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
+    const newPasswordHash = await this.passwordHashService.hash(newPassword);
 
-    //generate user confirmation code
-    const confirmationCode: string = codeGenerator();
-    try {
-      //create user
-      const userId: number = await this.usersRepository.createUser(
-        {
-          login,
-          password: await this.passwordHashService.hash(password),
-          email,
-          createdAt: new Date().toISOString(),
-        },
-        queryRunner,
-      );
+    await this.usersRepository.updateUserPasswordById(
+      userPasswordRecovery.userId,
+      newPasswordHash,
+    );
 
-      //create user-confirmation
-      await this.userConfirmationRepository.createUserConfirmation(
-        {
-          userId,
-          isConfirmed: this.userConfig.isUserAutoConfirmed,
-          confirmationCode: confirmationCode,
-          codeExpirationDate: createExpirationDate(60),
-        },
-        queryRunner,
-      );
+    return true;
+  }
 
-      //create user-pass-recovery
-      await this.userPasswordRecoveryRepository.createPasswordRecoveryForUser(
-        {
-          userId,
-          recoveryCode: null,
-          codeExpirationDate: null,
-        },
-        queryRunner,
-      );
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
-
-    return Result.ok(confirmationCode);
+  async setPasswordRecoveryCode(
+    userId: number,
+    recoveryCode: string,
+    expirationDate: string,
+  ) {
+    await this.userPasswordRecoveryRepository.updatePasswordRecovery(
+      userId,
+      recoveryCode,
+      expirationDate,
+    );
   }
 }

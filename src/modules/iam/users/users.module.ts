@@ -22,6 +22,13 @@ import { UserConfirmation } from './domain/user-confirmation.entity';
     UsersConfirmationRepository,
     UsersPasswordRecoveryRepository,
   ],
-  exports: [UsersService, UsersRepository, UsersQueryRepository],
+  exports: [
+    UsersService,
+    UsersRepository,
+    UsersPasswordRecoveryRepository,
+    UsersConfirmationRepository,
+    UsersQueryRepository,
+    UsersConfig,
+  ],
 })
 export class UsersModule {}

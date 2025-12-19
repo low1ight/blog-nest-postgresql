@@ -6,6 +6,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtAccessStrategy } from './strategies/jwt-access.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { DevicesModule } from '../devices/devices.module';
+import { Registration } from './application/use-cases/registration-use-case';
 
 @Module({
   imports: [UsersModule, DevicesModule],
@@ -15,6 +16,7 @@ import { DevicesModule } from '../devices/devices.module';
     LocalStrategy,
     JwtAccessStrategy,
     JwtRefreshStrategy,
+    Registration,
   ],
 })
 export class AuthModule {}

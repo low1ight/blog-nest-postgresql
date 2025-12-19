@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
 import { CreateUserPasswordRecoveryDto } from '../dto/create-user-password-recovery.dto';
+import { UserPasswordRecovery } from '../domain/user-password-recovery.entity';
 
 @Injectable()
 export class UsersPasswordRecoveryRepository {
@@ -32,5 +33,17 @@ export class UsersPasswordRecoveryRepository {
         WHERE "userId" = $1;`,
       [userId, recoveryCode, codeExpirationDate],
     );
+  }
+
+  async getByRecoveryCode(
+    recoveryCode: string,
+  ): Promise<UserPasswordRecovery | null> {
+    const result: UserPasswordRecovery[] = await this.dataSource.query(
+      `
+    SELECT * FROM public.users_password_recovery WHERE "recoveryCode" = $1
+    `,
+      [recoveryCode],
+    );
+    return result[0] || null;
   }
 }

@@ -38,8 +38,4 @@ export class DevicesService {
   async getDeviceById(deviceId: number) {
     return this.deviceRepository.getDeviceById(deviceId);
   }
-
-  async deleteDeviceById(deviceId: number) {
-    return this.deviceRepository.deleteDeviceById(deviceId);
-  }
 }

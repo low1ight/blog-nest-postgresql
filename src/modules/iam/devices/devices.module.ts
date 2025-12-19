@@ -5,11 +5,17 @@ import { DevicesService } from './application/devices.service';
 import { DevicesRepository } from './infrastructure/devices.repository';
 import { DevicesController } from './api/devices.controller';
 import { DevicesQueryRepository } from './infrastructure/devices.query.repository';
+import { TerminateAllOtherDevices } from './application/use-cases/terminate-all-other-devices.use-case';
 
 @Module({
   controllers: [DevicesController],
   imports: [TypeOrmModule.forFeature([Device])],
-  providers: [DevicesService, DevicesRepository, DevicesQueryRepository],
+  providers: [
+    DevicesService,
+    DevicesRepository,
+    DevicesQueryRepository,
+    TerminateAllOtherDevices,
+  ],
   exports: [DevicesService, DevicesRepository],
 })
 export class DevicesModule {}

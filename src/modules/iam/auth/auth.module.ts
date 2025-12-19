@@ -10,8 +10,9 @@ import { Registration } from './application/use-cases/registration-use-case';
 import { Login } from './application/use-cases/login-use-case';
 import { Logout } from './application/use-cases/logout-use-case';
 import { RefreshToken } from './application/use-cases/refreshToken-use-case';
+import { PasswordRecovery } from './application/use-cases/passwordRecovery-use-case';
 
-const userCases = [Registration, Login, Logout, RefreshToken];
+const userCases = [Registration, Login, Logout, RefreshToken, PasswordRecovery];
 
 @Module({
   imports: [UsersModule, DevicesModule],

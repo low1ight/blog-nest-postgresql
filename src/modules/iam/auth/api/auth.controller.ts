@@ -31,6 +31,8 @@ import { RegistrationCommand } from '../application/use-cases/registration-use-c
 import { LoginCommand } from '../application/use-cases/login-use-case';
 import { TokensPair } from '../../../../core/services/jwt/token.service';
 import { LogoutCommand } from '../application/use-cases/logout-use-case';
+import { RefreshTokenCommand } from '../application/use-cases/refreshToken-use-case';
+import { PasswordRecoveryCommand } from '../application/use-cases/passwordRecovery-use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -81,10 +83,10 @@ export class AuthController {
     @RtUser() user: RefreshTokenPayloadModel,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.refreshToken(
-      user.id,
-      user.deviceId,
-    );
+    const { accessToken, refreshToken }: TokensPair =
+      await this.commandBus.execute(
+        new RefreshTokenCommand(user.id, user.deviceId),
+      );
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 
@@ -96,12 +98,13 @@ export class AuthController {
   async me(
     @AtUser() { id }: AccessTokenPayloadModel,
   ): Promise<UserMeViewModel> {
-    return this.userQueryRepository.getUserMe(id);
+    return await this.userQueryRepository.getUserMe(id);
   }
 
   @Post('password-recovery')
   async passwordRecovery(@Body() { email }: PasswordRecoveryDto) {
-    return this.authService.passwordRecovery(email);
+    await this.commandBus.execute(new PasswordRecoveryCommand(email));
+    return;
   }
 
   @Post('new-password')

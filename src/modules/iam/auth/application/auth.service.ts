@@ -4,7 +4,6 @@ import { EmailService } from '../../../../core/services/email/email.service';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
 import { UserDocumentModel } from '../../users/dto/user-document.model';
-import { UserLoginModel } from '../../../../core/dto/user-login.model';
 import { TokenService } from '../../../../core/services/jwt/token.service';
 import { DevicesService } from '../../devices/application/devices.service';
 import { randomUUID } from 'crypto';
@@ -21,10 +20,6 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly deviceService: DevicesService,
   ) {}
-
-  async logout(deviceId: number) {
-    return await this.deviceService.deleteDeviceById(deviceId);
-  }
 
   async refreshToken(userId: number, deviceId: number) {
     const sessionId: string = randomUUID();

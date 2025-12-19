@@ -31,6 +31,10 @@ export class DevicesService {
     );
   }
 
+  async terminateAllOtherDevices(userId: number, deviceId: number) {
+    return await this.deviceRepository.deleteAllOtherDevices(userId, deviceId);
+  }
+
   async getDeviceById(deviceId: number) {
     return this.deviceRepository.getDeviceById(deviceId);
   }

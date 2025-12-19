@@ -29,6 +29,15 @@ export class DevicesRepository {
     return result[0];
   }
 
+  async deleteAllOtherDevices(userId: number, deviceId: number) {
+    await this.dataSource.query(
+      `
+    DELETE FROM public.devices
+    WHERE "userId" = $1 AND NOT "id" = $2`,
+      [userId, deviceId],
+    );
+  }
+
   async getDeviceById(id: number): Promise<Device | null> {
     const device: Device[] = await this.dataSource.query(
       `

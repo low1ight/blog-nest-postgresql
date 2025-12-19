@@ -7,10 +7,10 @@ import { DataSource } from 'typeorm';
 import { PasswordHashService } from '../../../../../core/services/passwordHash/password-hash.service';
 import { UsersConfirmationRepository } from '../../../users/infrastructure/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from '../../../users/infrastructure/users-password-recovery.repository';
-import { UsersConfig } from '../../../users/config/users.config';
 import { CreateUserDto } from '../../../users/api/input-dto/create-user.dto';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { EmailService } from '../../../../../core/services/email/email.service';
+import { AuthConfig } from '../../../auth.config';
 
 export class RegistrationCommand {
   constructor(public dto: CreateUserDto) {}
@@ -24,7 +24,7 @@ export class Registration implements ICommandHandler<RegistrationCommand> {
     private readonly userPasswordRecoveryRepository: UsersPasswordRecoveryRepository,
     private readonly dataSource: DataSource,
     private readonly passwordHashService: PasswordHashService,
-    private readonly userConfig: UsersConfig,
+    private readonly authConfig: AuthConfig,
     private readonly emailManager: EmailService,
   ) {}
 
@@ -68,7 +68,7 @@ export class Registration implements ICommandHandler<RegistrationCommand> {
       await this.userConfirmationRepository.createUserConfirmation(
         {
           userId,
-          isConfirmed: this.userConfig.isUserAutoConfirmed,
+          isConfirmed: this.authConfig.isUserAutoConfirmed,
           confirmationCode: confirmationCode,
           codeExpirationDate: createExpirationDate(60),
         },

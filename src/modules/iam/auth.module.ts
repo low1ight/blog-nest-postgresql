@@ -16,7 +16,6 @@ import { DevicesController } from './devices/api/devices.controller';
 import { User } from './users/domain/user.entity';
 import { UserPasswordRecovery } from './users/domain/user-password-recovery.entity';
 import { UserConfirmation } from './users/domain/user-confirmation.entity';
-import { UsersConfig } from './users/config/users.config';
 import { UsersService } from './users/application/users.service';
 import { UsersRepository } from './users/infrastructure/users.repository';
 import { UsersQueryRepository } from './users/infrastructure/users.query.repository';
@@ -27,6 +26,7 @@ import { DevicesRepository } from './devices/infrastructure/devices.repository';
 import { DevicesQueryRepository } from './devices/infrastructure/devices.query.repository';
 import { TerminateAllOtherDevices } from './devices/application/use-cases/terminate-all-other-devices.use-case';
 import { TerminateSpecifiedDevice } from './devices/application/use-cases/terminate-specified-device.use-case';
+import { AuthConfig } from './auth.config';
 
 const useCases = [
   Registration,
@@ -50,11 +50,11 @@ const useCases = [
     ]),
   ],
   providers: [
+    AuthConfig,
     AuthService,
     LocalStrategy,
     JwtAccessStrategy,
     JwtRefreshStrategy,
-    UsersConfig,
     UsersService,
     UsersRepository,
     UsersQueryRepository,

@@ -1,5 +1,7 @@
 export enum ResultErrorType {
   InvalidInput = 'Invalid input data',
+  NotFound = 'Not found',
+  AccessDenied = 'AccessDenied',
 }
 
 export abstract class ResultError<T, ErrT extends ResultErrorType> {
@@ -7,7 +9,10 @@ export abstract class ResultError<T, ErrT extends ResultErrorType> {
   abstract errorType: ErrT;
 }
 
-export type ResultErrUnion = ResultInputError;
+export type ResultErrUnion =
+  | ResultInputError
+  | ResultNotFoundError
+  | AccessDeniedError;
 
 //optional field for the opportunity create an empty Error message arr, and then push several Error
 export class ResultInputError extends ResultError<
@@ -28,6 +33,34 @@ export class ResultInputError extends ResultError<
 
   isExistErr() {
     return this.message.length > 0;
+  }
+}
+
+export class ResultNotFoundError extends ResultError<
+  string,
+  ResultErrorType.NotFound
+> {
+  message: string;
+  errorType: ResultErrorType.NotFound;
+
+  constructor() {
+    super();
+    this.message = 'Not Found';
+    this.errorType = ResultErrorType.NotFound;
+  }
+}
+
+export class AccessDeniedError extends ResultError<
+  string,
+  ResultErrorType.AccessDenied
+> {
+  message: string;
+  errorType: ResultErrorType.AccessDenied;
+
+  constructor(message: string) {
+    super();
+    this.message = message;
+    this.errorType = ResultErrorType.AccessDenied;
   }
 }
 

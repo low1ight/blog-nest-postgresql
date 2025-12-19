@@ -1,13 +1,15 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AuthService } from '../application/auth.service';
 import { CreateUserDto } from '../../users/api/input-dto/create-user.dto';
 import { ResultInputError } from '../../../../core/helpers/result/result-error';
 import { ResultType } from '../../../../core/helpers/result/result';
@@ -33,11 +35,11 @@ import { TokensPair } from '../../../../core/services/jwt/token.service';
 import { LogoutCommand } from '../application/use-cases/logout-use-case';
 import { RefreshTokenCommand } from '../application/use-cases/refreshToken-use-case';
 import { PasswordRecoveryCommand } from '../application/use-cases/passwordRecovery-use-case';
+import { SetNewPasswordCommand } from '../application/use-cases/set-new-password.use-case';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService,
     private readonly userQueryRepository: UsersQueryRepository,
     private readonly commandBus: CommandBus,
   ) {}
@@ -54,6 +56,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(
     @CurrentUser() user: UserLoginModel,
     @Req() req: Request,
@@ -71,6 +74,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtRefreshAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('logout')
   async logout(@RtUser() user: RefreshTokenPayloadModel) {
     await this.commandBus.execute(new LogoutCommand(user.deviceId));
@@ -109,6 +113,12 @@ export class AuthController {
 
   @Post('new-password')
   async newPassword(@Body() dto: NewPasswordDto) {
-    return this.authService.setNewPassword(dto);
+    const result: boolean = await this.commandBus.execute(
+      new SetNewPasswordCommand(dto),
+    );
+    if (!result)
+      throw new BadRequestException('RecoveryCode is incorrect or expired');
+
+    return;
   }
 }

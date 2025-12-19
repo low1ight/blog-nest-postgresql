@@ -14,10 +14,6 @@ export class UsersService {
     private readonly userPasswordRecoveryRepository: UsersPasswordRecoveryRepository,
   ) {}
 
-  async getUserByEmailOrLogin(email: string) {
-    return await this.usersRepository.getUserByEmailOrLogin(email);
-  }
-
   async setNewPassword({
     newPassword,
     recoveryCode,

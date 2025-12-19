@@ -10,6 +10,6 @@ import { DevicesQueryRepository } from './infrastructure/devices.query.repositor
   controllers: [DevicesController],
   imports: [TypeOrmModule.forFeature([Device])],
   providers: [DevicesService, DevicesRepository, DevicesQueryRepository],
-  exports: [DevicesService],
+  exports: [DevicesService, DevicesRepository],
 })
 export class DevicesModule {}

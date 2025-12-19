@@ -11,8 +11,16 @@ import { Login } from './application/use-cases/login-use-case';
 import { Logout } from './application/use-cases/logout-use-case';
 import { RefreshToken } from './application/use-cases/refreshToken-use-case';
 import { PasswordRecovery } from './application/use-cases/passwordRecovery-use-case';
+import { SetNewPassword } from './application/use-cases/set-new-password.use-case';
 
-const userCases = [Registration, Login, Logout, RefreshToken, PasswordRecovery];
+const userCases = [
+  Registration,
+  Login,
+  Logout,
+  RefreshToken,
+  PasswordRecovery,
+  SetNewPassword,
+];
 
 @Module({
   imports: [UsersModule, DevicesModule],

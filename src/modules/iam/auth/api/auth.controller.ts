@@ -36,6 +36,8 @@ import { LogoutCommand } from '../application/use-cases/logout.use-case';
 import { RefreshTokenCommand } from '../application/use-cases/refresh-token.use-case';
 import { PasswordRecoveryCommand } from '../application/use-cases/password-recovery.use-case';
 import { SetNewPasswordCommand } from '../application/use-cases/set-new-password.use-case';
+import { RegistrationEmailResendingCommand } from '../application/use-cases/registration-email-resending.use-case';
+import { RegistrationEmailResendingDto } from './input-dto/registration-email-resending.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -52,6 +54,18 @@ export class AuthController {
     if (result.isSuccessful) return result.content;
 
     throwExceptionFromCustomErr(result.error);
+  }
+
+  @Post('registration-email-resending')
+  async registrationEmailResending(@Body() dto: RegistrationEmailResendingDto) {
+    const result: ResultType<null, ResultInputError> =
+      await this.commandBus.execute(
+        new RegistrationEmailResendingCommand(dto.email),
+      );
+
+    if (!result.isSuccessful) return throwExceptionFromCustomErr(result.error);
+
+    return;
   }
 
   @UseGuards(LocalAuthGuard)

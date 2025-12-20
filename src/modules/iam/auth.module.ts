@@ -30,6 +30,7 @@ import { AuthConfig } from './auth.config';
 import { TokenService } from './auth/providers/jwt/token.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PasswordHashService } from './users/providers/passwordHash/password-hash.service';
+import { RegistrationEmailResending } from './auth/application/use-cases/registration-email-resending.use-case';
 
 const useCases = [
   Registration,
@@ -40,6 +41,7 @@ const useCases = [
   SetNewPassword,
   TerminateAllOtherDevices,
   TerminateSpecifiedDevice,
+  RegistrationEmailResending,
 ];
 
 @Module({

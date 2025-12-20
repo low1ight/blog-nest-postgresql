@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
-import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
+import { PasswordHashService } from '../../users/providers/passwordHash/password-hash.service';
 import { UserDocumentModel } from '../../users/dto/user-document.model';
 
 @Injectable()

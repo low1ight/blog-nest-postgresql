@@ -4,7 +4,7 @@ import { codeGenerator } from '../../../../../core/utils/code-generator';
 import { createExpirationDate } from '../../../../../core/utils/create-expiration-date';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 import { DataSource } from 'typeorm';
-import { PasswordHashService } from '../../../../../core/services/passwordHash/password-hash.service';
+import { PasswordHashService } from '../../../users/providers/passwordHash/password-hash.service';
 import { UsersConfirmationRepository } from '../../../users/infrastructure/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from '../../../users/infrastructure/users-password-recovery.repository';
 import { CreateUserDto } from '../../../users/api/input-dto/create-user.dto';

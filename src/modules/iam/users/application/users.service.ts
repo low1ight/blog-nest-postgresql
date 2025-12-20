@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../infrastructure/users.repository';
-import { PasswordHashService } from '../../../../core/services/passwordHash/password-hash.service';
+import { PasswordHashService } from '../providers/passwordHash/password-hash.service';
 import { UsersPasswordRecoveryRepository } from '../infrastructure/users-password-recovery.repository';
 import { NewPasswordDto } from '../../auth/api/input-dto/new-password.dto';
 import { UserPasswordRecovery } from '../domain/user-password-recovery.entity';

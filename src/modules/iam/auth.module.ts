@@ -29,6 +29,7 @@ import { TerminateSpecifiedDevice } from './devices/application/use-cases/termin
 import { AuthConfig } from './auth.config';
 import { TokenService } from './auth/providers/jwt/token.service';
 import { JwtModule } from '@nestjs/jwt';
+import { PasswordHashService } from './users/providers/passwordHash/password-hash.service';
 
 const useCases = [
   Registration,
@@ -59,6 +60,7 @@ const useCases = [
   ],
   providers: [
     TokenService,
+    PasswordHashService,
     AuthService,
     LocalStrategy,
     JwtAccessStrategy,

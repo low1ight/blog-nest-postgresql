@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserPasswordRecovery } from '../../../users/domain/user-password-recovery.entity';
 import { isDateExpired } from '../../../../../core/utils/is-date-expired';
 import { UsersPasswordRecoveryRepository } from '../../../users/infrastructure/users-password-recovery.repository';
-import { PasswordHashService } from '../../../../../core/services/passwordHash/password-hash.service';
+import { PasswordHashService } from '../../../users/providers/passwordHash/password-hash.service';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 import { NewPasswordDto } from '../../api/input-dto/new-password.dto';
 

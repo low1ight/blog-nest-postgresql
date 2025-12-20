@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
-import { PasswordHashConfig } from './password-hash.config';
+import { AuthConfig } from '../../../auth.config';
 
 @Injectable()
 export class PasswordHashService {
-  constructor(private readonly passwordHashConfig: PasswordHashConfig) {}
+  constructor(private readonly authConfig: AuthConfig) {}
 
   async hash(password: string) {
-    return bcrypt.hash(password, this.passwordHashConfig.saltRounds);
+    return bcrypt.hash(password, this.authConfig.saltRounds);
   }
 
   async compare(currentPassword: string, correctHashedPassword: string) {

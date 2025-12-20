@@ -30,6 +30,9 @@ export class AuthConfig {
   })
   isUserAutoConfirmed: boolean;
 
+  @Min(1, { message: configValidationMessage('BCRYPT_SALT_ROUNDS', '10') })
+  saltRounds: number;
+
   constructor(private configService: ConfigService) {
     this.isUserAutoConfirmed = ConfigValidationUtility.convertToBoolean(
       this.configService.get('IS_USER_AUTO_CONFIRMED'),
@@ -42,6 +45,7 @@ export class AuthConfig {
     this.refreshTokenExpirationTime = Number(
       this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
     );
+    this.saltRounds = Number(configService.get('BCRYPT_SALT_ROUNDS'));
 
     ConfigValidationUtility.validate(this);
   }

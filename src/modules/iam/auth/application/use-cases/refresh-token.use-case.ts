@@ -1,10 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DevicesRepository } from '../../../devices/infrastructure/devices.repository';
 import { randomUUID } from 'crypto';
-import {
-  TokenService,
-  TokensPair,
-} from '../../../../../core/services/jwt/token.service';
+import { TokenService, TokensPair } from '../../providers/jwt/token.service';
 
 export class RefreshTokenCommand {
   constructor(

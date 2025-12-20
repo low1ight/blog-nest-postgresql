@@ -27,6 +27,8 @@ import { DevicesQueryRepository } from './devices/infrastructure/devices.query.r
 import { TerminateAllOtherDevices } from './devices/application/use-cases/terminate-all-other-devices.use-case';
 import { TerminateSpecifiedDevice } from './devices/application/use-cases/terminate-specified-device.use-case';
 import { AuthConfig } from './auth.config';
+import { TokenService } from './auth/providers/jwt/token.service';
+import { JwtModule } from '@nestjs/jwt';
 
 const useCases = [
   Registration,
@@ -42,6 +44,12 @@ const useCases = [
 @Module({
   controllers: [AuthController, DevicesController],
   imports: [
+    JwtModule.registerAsync({
+      useFactory: (authConfig: AuthConfig) => ({
+        secret: authConfig.jwtSecret,
+      }),
+      inject: [AuthConfig],
+    }),
     TypeOrmModule.forFeature([
       User,
       UserPasswordRecovery,
@@ -50,7 +58,7 @@ const useCases = [
     ]),
   ],
   providers: [
-    AuthConfig,
+    TokenService,
     AuthService,
     LocalStrategy,
     JwtAccessStrategy,

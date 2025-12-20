@@ -1,10 +1,10 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { TokenConfig } from '../../../../core/services/jwt/token.config';
 import { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
 import { Request } from 'express';
 import { DevicesService } from '../../devices/application/devices.service';
+import { AuthConfig } from '../../auth.config';
 
 type RequestWithCookie = Request & {
   cookies?: {
@@ -22,13 +22,13 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(
-    tokenConfig: TokenConfig,
+    authConfig: AuthConfig,
     private readonly devicesService: DevicesService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([getTokenFromCookie]),
       ignoreExpiration: false,
-      secretOrKey: tokenConfig.jwtSecret,
+      secretOrKey: authConfig.jwtSecret,
     });
   }
 

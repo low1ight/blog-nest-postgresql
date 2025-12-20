@@ -1,19 +1,19 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { TokenConfig } from '../../../../core/services/jwt/token.config';
 import { AccessTokenPayloadModel } from '../../../../core/dto/access-token-payload.model';
+import { AuthConfig } from '../../auth.config';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(
   Strategy,
   'jwt-access',
 ) {
-  constructor(tokenConfig: TokenConfig) {
+  constructor(authConfig: AuthConfig) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: tokenConfig.jwtSecret,
+      secretOrKey: authConfig.jwtSecret,
     });
   }
 

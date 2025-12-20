@@ -31,7 +31,7 @@ import { UserMeViewModel } from '../../users/api/view-dto/user-me.view.model';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrationCommand } from '../application/use-cases/registration.use-case';
 import { LoginCommand } from '../application/use-cases/login.use-case';
-import { TokensPair } from '../../../../core/services/jwt/token.service';
+import { TokensPair } from '../providers/jwt/token.service';
 import { LogoutCommand } from '../application/use-cases/logout.use-case';
 import { RefreshTokenCommand } from '../application/use-cases/refresh-token.use-case';
 import { PasswordRecoveryCommand } from '../application/use-cases/password-recovery.use-case';

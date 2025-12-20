@@ -38,6 +38,8 @@ import { PasswordRecoveryCommand } from '../application/use-cases/password-recov
 import { SetNewPasswordCommand } from '../application/use-cases/set-new-password.use-case';
 import { RegistrationEmailResendingCommand } from '../application/use-cases/registration-email-resending.use-case';
 import { RegistrationEmailResendingDto } from './input-dto/registration-email-resending.dto';
+import { RegistrationConfirmationDto } from './input-dto/registration-confirmation.dto';
+import { RegistrationConfirmationCommand } from '../application/use-cases/email-confirmation.use-case';
 
 @Controller('auth')
 export class AuthController {
@@ -61,6 +63,18 @@ export class AuthController {
     const result: ResultType<null, ResultInputError> =
       await this.commandBus.execute(
         new RegistrationEmailResendingCommand(dto.email),
+      );
+
+    if (!result.isSuccessful) return throwExceptionFromCustomErr(result.error);
+
+    return;
+  }
+
+  @Post('registration-confirmation')
+  async registrationConfirmation(@Body() dto: RegistrationConfirmationDto) {
+    const result: ResultType<null, ResultInputError> =
+      await this.commandBus.execute(
+        new RegistrationConfirmationCommand(dto.code),
       );
 
     if (!result.isSuccessful) return throwExceptionFromCustomErr(result.error);

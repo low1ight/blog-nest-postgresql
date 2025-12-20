@@ -38,6 +38,19 @@ export class UsersConfirmationRepository {
     return result[0] || null;
   }
 
+  async getUserConfirmationByConfirmationCode(code: string) {
+    const result: UserConfirmation[] = await this.dataSource.query(
+      `
+    SELECT "userId","isConfirmed","confirmationCode","codeExpirationDate" 
+    FROM public.users_confirmation
+    WHERE "confirmationCode"=$1;
+    `,
+      [code],
+    );
+
+    return result[0] || null;
+  }
+
   async updateConfirmationCode(
     userId: number,
     code: string,
@@ -53,5 +66,16 @@ export class UsersConfirmationRepository {
     );
 
     return result[0] || null;
+  }
+
+  async confirmUserById(userId: number) {
+    await this.dataSource.query(
+      `
+     UPDATE public.users_confirmation
+     SET "isConfirmed"=true
+     WHERE "userId"=$1;
+    `,
+      [userId],
+    );
   }
 }

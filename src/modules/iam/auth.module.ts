@@ -34,6 +34,7 @@ import { RegistrationEmailResending } from './auth/application/use-cases/registr
 import { RegistrationConfirmation } from './auth/application/use-cases/email-confirmation.use-case';
 import { SAUserController } from './users/api/sa-users.controller';
 import { CreateUser } from './users/application/use-cases/create-user.use-case';
+import { DeleteUser } from './users/application/use-cases/delete-user.use-case';
 
 const useCases = [
   Registration,
@@ -47,6 +48,7 @@ const useCases = [
   RegistrationEmailResending,
   RegistrationConfirmation,
   CreateUser,
+  DeleteUser,
 ];
 
 @Module({

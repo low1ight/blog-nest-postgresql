@@ -77,4 +77,12 @@ export class UsersRepository {
 
     return user[0] || null;
   }
+
+  async deleteUserById(id: number): Promise<void> {
+    await this.dataSource.query(
+      `
+    DELETE FROM public.users WHERE id = $1`,
+      [id],
+    );
+  }
 }

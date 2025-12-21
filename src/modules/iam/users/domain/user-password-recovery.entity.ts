@@ -6,7 +6,9 @@ export class UserPasswordRecovery {
   @PrimaryColumn()
   userId: number;
 
-  @OneToOne(() => User, (user) => user.passwordRecovery)
+  @OneToOne(() => User, (user) => user.passwordRecovery, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 

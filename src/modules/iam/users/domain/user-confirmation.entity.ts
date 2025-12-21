@@ -6,7 +6,7 @@ export class UserConfirmation {
   @PrimaryColumn()
   userId: number;
 
-  @OneToOne(() => User, (user) => user.confirmation)
+  @OneToOne(() => User, (user) => user.confirmation, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 

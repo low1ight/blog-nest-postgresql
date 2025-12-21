@@ -27,7 +27,7 @@ export class Device {
   @Column()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.devices)
+  @ManyToOne(() => User, (user) => user.devices, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 }

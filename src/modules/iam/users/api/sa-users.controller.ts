@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserDto } from './input-dto/create-user.dto';
@@ -20,14 +21,15 @@ import { throwExceptionFromCustomErr } from '../../../../core/exception/throw-ex
 import { UsersQueryRepository } from '../infrastructure/query/users.query.repository';
 import { DeleteUserCommand } from '../application/use-cases/delete-user.use-case';
 import { UsersQueryParams } from './input-dto/get-users-query.dto';
+import { BasicAuthGuard } from '../../../../core/guards/basic-auth.guard';
 
 @Controller('sa/users')
-export class SAUserController {
+export class SaUserController {
   constructor(
     private readonly commandBus: CommandBus,
     private readonly usersQueryRepository: UsersQueryRepository,
   ) {}
-
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createUser(@Body() dto: CreateUserDto) {
     const result: ResultType<number, ResultInputError> =
@@ -40,6 +42,7 @@ export class SAUserController {
     return await this.usersQueryRepository.getUserById(result.content);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     const result: ResultType<null, ResultNotFoundError> =
@@ -51,6 +54,8 @@ export class SAUserController {
 
     return;
   }
+
+  @UseGuards(BasicAuthGuard)
   @Get()
   async getUsers(@Query() query: UsersQueryParams) {
     return await this.usersQueryRepository.getUsers(query);

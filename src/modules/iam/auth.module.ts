@@ -32,7 +32,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PasswordHashService } from './users/providers/passwordHash/password-hash.service';
 import { RegistrationEmailResending } from './auth/application/use-cases/registration-email-resending.use-case';
 import { RegistrationConfirmation } from './auth/application/use-cases/email-confirmation.use-case';
-import { SAUserController } from './users/api/sa-users.controller';
+import { SaUserController } from './users/api/sa-users.controller';
 import { CreateUser } from './users/application/use-cases/create-user.use-case';
 import { DeleteUser } from './users/application/use-cases/delete-user.use-case';
 import { BasicStrategy } from './auth/strategies/basic.strategy';
@@ -53,7 +53,7 @@ const useCases = [
 ];
 
 @Module({
-  controllers: [AuthController, DevicesController, SAUserController],
+  controllers: [AuthController, DevicesController, SaUserController],
   imports: [
     JwtModule.registerAsync({
       useFactory: (authConfig: AuthConfig) => ({

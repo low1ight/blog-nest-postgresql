@@ -2,48 +2,86 @@ import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../infrastructure/users.repository';
 import { PasswordHashService } from '../providers/passwordHash/password-hash.service';
 import { UsersPasswordRecoveryRepository } from '../infrastructure/users-password-recovery.repository';
-import { NewPasswordDto } from '../../auth/api/input-dto/new-password.dto';
-import { UserPasswordRecovery } from '../domain/user-password-recovery.entity';
-import { isDateExpired } from '../../../../core/utils/is-date-expired';
+import { CreateUserDto } from '../api/input-dto/create-user.dto';
+import { ResultInputError } from '../../../../core/helpers/result/result-error';
+import { Result } from '../../../../core/helpers/result/result';
+import { DataSource } from 'typeorm';
+import { UsersConfirmationRepository } from '../infrastructure/users-confirmation.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
+    private readonly userConfirmationRepository: UsersConfirmationRepository,
     private readonly passwordHashService: PasswordHashService,
     private readonly userPasswordRecoveryRepository: UsersPasswordRecoveryRepository,
+    private readonly dataSource: DataSource,
   ) {}
 
-  async setNewPassword({
-    newPassword,
-    recoveryCode,
-  }: NewPasswordDto): Promise<boolean> {
-    const userPasswordRecovery: UserPasswordRecovery | null =
-      await this.userPasswordRecoveryRepository.getByRecoveryCode(recoveryCode);
-
-    if (!userPasswordRecovery) return false;
-
-    if (isDateExpired(userPasswordRecovery.codeExpirationDate)) return false;
-
-    const newPasswordHash = await this.passwordHashService.hash(newPassword);
-
-    await this.usersRepository.updateUserPasswordById(
-      userPasswordRecovery.userId,
-      newPasswordHash,
-    );
-
-    return true;
-  }
-
-  async setPasswordRecoveryCode(
-    userId: number,
-    recoveryCode: string,
-    expirationDate: string,
+  async createUser(
+    { login, email, password }: CreateUserDto,
+    userConfirmationCode: string | null,
+    confirmationCodeExpirationDate: string | null,
+    isUserConfirmed: boolean,
   ) {
-    await this.userPasswordRecoveryRepository.updatePasswordRecovery(
-      userId,
-      recoveryCode,
-      expirationDate,
-    );
+    const isUserLoginExist =
+      await this.usersRepository.isUserExistByLogin(login);
+    const isUserEmailExist =
+      await this.usersRepository.isUserExistByEmail(email);
+
+    // const [isUserLoginExist1, isUserEmailExist1] = await Promise.all([
+    //   this.usersRepository.isUserExistByLogin(login),
+    //   this.usersRepository.isUserExistByEmail(email),
+    // ]);
+
+    const inputError: ResultInputError = new ResultInputError();
+
+    if (isUserLoginExist) inputError.addErr('login already exist', 'user');
+    if (isUserEmailExist) inputError.addErr('email already exist', 'email');
+
+    if (inputError.isExistErr()) return Result.fail(inputError);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const userId: number = await this.usersRepository.createUser(
+        {
+          login,
+          password: await this.passwordHashService.hash(password),
+          email,
+          createdAt: new Date().toISOString(),
+        },
+        queryRunner,
+      );
+
+      await this.userConfirmationRepository.createUserConfirmation(
+        {
+          userId,
+          isConfirmed: isUserConfirmed,
+          confirmationCode: userConfirmationCode,
+          codeExpirationDate: confirmationCodeExpirationDate,
+        },
+        queryRunner,
+      );
+
+      await this.userPasswordRecoveryRepository.createPasswordRecoveryForUser(
+        {
+          userId,
+          recoveryCode: null,
+          codeExpirationDate: null,
+        },
+        queryRunner,
+      );
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+
+    return Result.ok();
   }
 }

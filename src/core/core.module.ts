@@ -5,6 +5,7 @@ import { JwtAccessAuthGuard } from './guards/jwt-access-auth.guard';
 import { JwtRefreshAuthGuard } from './guards/jwt-refresh-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthConfig } from '../modules/iam/auth.config';
+import { BasicAuthGuard } from './guards/basic-auth.guard';
 
 @Global()
 @Module({
@@ -13,6 +14,7 @@ import { AuthConfig } from '../modules/iam/auth.config';
     CoreConfig,
     JwtAccessAuthGuard,
     JwtRefreshAuthGuard,
+    BasicAuthGuard,
     LocalAuthGuard,
     AuthConfig,
   ],

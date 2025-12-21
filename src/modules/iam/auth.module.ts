@@ -35,6 +35,7 @@ import { RegistrationConfirmation } from './auth/application/use-cases/email-con
 import { SAUserController } from './users/api/sa-users.controller';
 import { CreateUser } from './users/application/use-cases/create-user.use-case';
 import { DeleteUser } from './users/application/use-cases/delete-user.use-case';
+import { BasicStrategy } from './auth/strategies/basic.strategy';
 
 const useCases = [
   Registration,
@@ -74,6 +75,7 @@ const useCases = [
     LocalStrategy,
     JwtAccessStrategy,
     JwtRefreshStrategy,
+    BasicStrategy,
     UsersService,
     UsersRepository,
     UsersQueryRepository,

@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateUserDto } from './input-dto/create-user.dto';
@@ -17,6 +19,7 @@ import {
 import { throwExceptionFromCustomErr } from '../../../../core/exception/throw-exception-from-custom-err';
 import { UsersQueryRepository } from '../infrastructure/query/users.query.repository';
 import { DeleteUserCommand } from '../application/use-cases/delete-user.use-case';
+import { UsersQueryParams } from './input-dto/get-users-query.dto';
 
 @Controller('sa/users')
 export class SAUserController {
@@ -39,7 +42,6 @@ export class SAUserController {
 
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
-    console.log('lole');
     const result: ResultType<null, ResultNotFoundError> =
       await this.commandBus.execute(new DeleteUserCommand(id));
 
@@ -48,5 +50,9 @@ export class SAUserController {
     }
 
     return;
+  }
+  @Get()
+  async getUsers(@Query() query: UsersQueryParams) {
+    return await this.usersQueryRepository.getUsers(query);
   }
 }

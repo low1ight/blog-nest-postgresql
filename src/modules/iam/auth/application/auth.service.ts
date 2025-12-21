@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { PasswordHashService } from '../../users/providers/passwordHash/password-hash.service';
-import { UserDocumentModel } from '../../users/dto/user-document.model';
+import { User } from '../../users/domain/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async validateUser(loginOrEmail: string, password: string) {
-    const user: UserDocumentModel | null =
+    const user: User | null =
       await this.userRepository.getUserByEmailOrLogin(loginOrEmail);
 
     if (!user) return null;

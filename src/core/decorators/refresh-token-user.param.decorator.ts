@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { RefreshTokenPayloadModel } from '../dto/refresh-token-payload.model';
+import { RefreshTokenPayloadModel } from '../dto/auth/refresh-token-payload.model';
 
 export const RtUser = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): RefreshTokenPayloadModel => {

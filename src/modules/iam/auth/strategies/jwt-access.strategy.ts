@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { AccessTokenPayloadModel } from '../../../../core/dto/access-token-payload.model';
+import { AccessTokenPayloadModel } from '../../../../core/dto/auth/access-token-payload.model';
 import { AuthConfig } from '../../auth.config';
 
 @Injectable()

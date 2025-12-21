@@ -9,7 +9,7 @@ import {
 import { JwtRefreshAuthGuard } from '../../../../core/guards/jwt-refresh-auth.guard';
 import { DevicesQueryRepository } from '../infrastructure/devices.query.repository';
 import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
-import type { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
+import type { RefreshTokenPayloadModel } from '../../../../core/dto/auth/refresh-token-payload.model';
 import { CommandBus } from '@nestjs/cqrs';
 import { TerminateAllOtherDevicesCommand } from '../application/use-cases/terminate-all-other-devices.use-case';
 import { TerminateSpecifiedDeviceCommand } from '../application/use-cases/terminate-specified-device.use-case';

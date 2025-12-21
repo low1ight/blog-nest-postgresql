@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, QueryRunner } from 'typeorm';
-import { UserDocumentModel } from '../dto/user-document.model';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { User } from '../domain/user.entity';
 
 @Injectable()
 export class UsersRepository {
@@ -25,7 +25,7 @@ export class UsersRepository {
   }
 
   async isUserExistByLogin(login: string): Promise<boolean> {
-    const result: UserDocumentModel[] = await this.dataSource.query(
+    const result: User[] = await this.dataSource.query(
       `
     SELECT * FROM public.users WHERE login = $1`,
       [login],
@@ -35,7 +35,7 @@ export class UsersRepository {
   }
 
   async isUserExistByEmail(email: string): Promise<boolean> {
-    const result: UserDocumentModel[] = await this.dataSource.query(
+    const result: User[] = await this.dataSource.query(
       `
     SELECT * FROM public.users WHERE email = $1`,
       [email],
@@ -44,10 +44,8 @@ export class UsersRepository {
     return result.length > 0;
   }
 
-  async getUserByEmailOrLogin(
-    loginOrEmail: string,
-  ): Promise<UserDocumentModel | null> {
-    const user: UserDocumentModel[] | [] = await this.dataSource.query(
+  async getUserByEmailOrLogin(loginOrEmail: string): Promise<User | null> {
+    const user: User[] | [] = await this.dataSource.query(
       `
     SELECT id,login,email,password,"createdAt" FROM public.users WHERE login = $1 OR email = $1
     `,
@@ -67,8 +65,8 @@ export class UsersRepository {
     );
   }
 
-  async getUserById(userId: number): Promise<UserDocumentModel | null> {
-    const user: UserDocumentModel[] | [] = await this.dataSource.query(
+  async getUserById(userId: number): Promise<User | null> {
+    const user: User[] | [] = await this.dataSource.query(
       `
     SELECT id,login,email,password,"createdAt" FROM public.users WHERE id = $1 
     `,

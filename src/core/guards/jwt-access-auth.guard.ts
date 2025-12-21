@@ -1,6 +1,6 @@
 import { AuthGuard } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AccessTokenPayloadModel } from '../dto/access-token-payload.model';
+import { AccessTokenPayloadModel } from '../dto/auth/access-token-payload.model';
 
 @Injectable()
 export class JwtAccessAuthGuard extends AuthGuard('jwt-access') {

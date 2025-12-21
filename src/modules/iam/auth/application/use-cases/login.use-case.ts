@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserLoginModel } from '../../../../../core/dto/user-login.model';
+import { UserLoginModel } from '../../../../../core/dto/auth/user-login.model';
 import { DevicesService } from '../../../devices/application/devices.service';
 import { TokenService, TokensPair } from '../../providers/jwt/token.service';
 

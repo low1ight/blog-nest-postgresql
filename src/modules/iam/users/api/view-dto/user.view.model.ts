@@ -1,4 +1,4 @@
-import { UserDocumentModel } from '../../dto/user-document.model';
+import { UserDocumentModel } from '../../infrastructure/query/models/get-users-document-model';
 
 export class UserViewModel {
   id: number;

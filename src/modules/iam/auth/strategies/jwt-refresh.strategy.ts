@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
+import { RefreshTokenPayloadModel } from '../../../../core/dto/auth/refresh-token-payload.model';
 import { Request } from 'express';
 import { DevicesService } from '../../devices/application/devices.service';
 import { AuthConfig } from '../../auth.config';

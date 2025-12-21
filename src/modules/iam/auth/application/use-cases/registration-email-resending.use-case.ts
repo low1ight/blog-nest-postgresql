@@ -1,13 +1,13 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../../../users/infrastructure/users.repository';
 import { UsersConfirmationRepository } from '../../../users/infrastructure/users-confirmation.repository';
-import { UserDocumentModel } from '../../../users/dto/user-document.model';
 import { Result } from '../../../../../core/helpers/result/result';
 import { ResultInputError } from '../../../../../core/helpers/result/result-error';
 import { UserConfirmation } from '../../../users/domain/user-confirmation.entity';
 import { codeGenerator } from '../../../../../core/utils/code-generator';
 import { createExpirationDate } from '../../../../../core/utils/create-expiration-date';
 import { EmailService } from '../../../../../core/services/email/email.service';
+import { User } from '../../../users/domain/user.entity';
 
 export class RegistrationEmailResendingCommand {
   constructor(public email: string) {}
@@ -24,7 +24,7 @@ export class RegistrationEmailResending
   ) {}
 
   async execute({ email }: RegistrationEmailResendingCommand) {
-    const user: UserDocumentModel | null =
+    const user: User | null =
       await this.usersRepository.getUserByEmailOrLogin(email);
     if (!user)
       return Result.fail(new ResultInputError('Invalid email', 'email'));

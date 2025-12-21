@@ -1,0 +1,15 @@
+import { UserDocumentModel } from '../../dto/user-document.model';
+
+export class UserViewModel {
+  id: number;
+  login: string;
+  email: string;
+  createdAt: string;
+
+  constructor({ id, email, login, createdAt }: UserDocumentModel) {
+    this.id = id;
+    this.login = login;
+    this.email = email;
+    this.createdAt = createdAt;
+  }
+}

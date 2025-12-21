@@ -23,7 +23,7 @@ import { AtUser } from '../../../../core/decorators/acess-token-user.param.decor
 import { RtUser } from '../../../../core/decorators/refresh-token-user.param.decorator';
 import type { AccessTokenPayloadModel } from '../../../../core/dto/access-token-payload.model';
 import type { RefreshTokenPayloadModel } from '../../../../core/dto/refresh-token-payload.model';
-import { UsersQueryRepository } from '../../users/infrastructure/users.query.repository';
+import { UsersQueryRepository } from '../../users/infrastructure/query/users.query.repository';
 import { JwtRefreshAuthGuard } from '../../../../core/guards/jwt-refresh-auth.guard';
 import { PasswordRecoveryDto } from './input-dto/password-recovery.dto';
 import { NewPasswordDto } from './input-dto/new-password.dto';

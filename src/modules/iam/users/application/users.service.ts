@@ -44,9 +44,10 @@ export class UsersService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
+    let userId: number;
 
     try {
-      const userId: number = await this.usersRepository.createUser(
+      userId = await this.usersRepository.createUser(
         {
           login,
           password: await this.passwordHashService.hash(password),
@@ -82,6 +83,6 @@ export class UsersService {
       await queryRunner.release();
     }
 
-    return Result.ok();
+    return Result.ok(userId);
   }
 }

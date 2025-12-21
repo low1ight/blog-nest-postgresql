@@ -18,7 +18,7 @@ import { UserPasswordRecovery } from './users/domain/user-password-recovery.enti
 import { UserConfirmation } from './users/domain/user-confirmation.entity';
 import { UsersService } from './users/application/users.service';
 import { UsersRepository } from './users/infrastructure/users.repository';
-import { UsersQueryRepository } from './users/infrastructure/users.query.repository';
+import { UsersQueryRepository } from './users/infrastructure/query/users.query.repository';
 import { UsersConfirmationRepository } from './users/infrastructure/users-confirmation.repository';
 import { UsersPasswordRecoveryRepository } from './users/infrastructure/users-password-recovery.repository';
 import { DevicesService } from './devices/application/devices.service';
@@ -32,6 +32,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PasswordHashService } from './users/providers/passwordHash/password-hash.service';
 import { RegistrationEmailResending } from './auth/application/use-cases/registration-email-resending.use-case';
 import { RegistrationConfirmation } from './auth/application/use-cases/email-confirmation.use-case';
+import { SAUserController } from './users/api/sa-users.controller';
+import { CreateUser } from './users/application/use-cases/create-user.use-case';
 
 const useCases = [
   Registration,
@@ -44,10 +46,11 @@ const useCases = [
   TerminateSpecifiedDevice,
   RegistrationEmailResending,
   RegistrationConfirmation,
+  CreateUser,
 ];
 
 @Module({
-  controllers: [AuthController, DevicesController],
+  controllers: [AuthController, DevicesController, SAUserController],
   imports: [
     JwtModule.registerAsync({
       useFactory: (authConfig: AuthConfig) => ({

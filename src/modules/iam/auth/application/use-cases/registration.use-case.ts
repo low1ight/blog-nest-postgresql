@@ -27,7 +27,7 @@ export class Registration implements ICommandHandler<RegistrationCommand> {
     const expirationDate = createExpirationDate(60);
     const isConfirmed = this.authConfig.isUserAutoConfirmed;
 
-    const result: ResultType<null, ResultInputError> =
+    const result: ResultType<number, ResultInputError> =
       await this.usersService.createUser(
         command.dto,
         confirmationCode,

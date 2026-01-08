@@ -1,10 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './core/exception/exception-filter/http-exception.filter';
-import { ErrorViewType } from './core/exception/types/error.view.type';
 import { CoreConfig } from './core/config/core.config';
-import cookieParser from 'cookie-parser';
+import { appSetup } from './setup/app.setup';
 
 async function bootstrap() {
   //create app context
@@ -16,30 +13,8 @@ async function bootstrap() {
   const DynamicAppModule = AppModule.forRoot(coreConfig);
   const app = await NestFactory.create(DynamicAppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      stopAtFirstError: true,
-      transform: true,
-      exceptionFactory: (errors) => {
-        const errorsViewModel: ErrorViewType[] = [];
+  appSetup(app);
 
-        errors.forEach((e) => {
-          if (!e.constraints) return;
-
-          const errViewModel: ErrorViewType = {
-            message: Object.values(e.constraints)[0],
-            field: e.property,
-          };
-
-          errorsViewModel.push(errViewModel);
-        });
-
-        throw new BadRequestException(errorsViewModel);
-      },
-    }),
-  );
-  app.use(cookieParser());
-  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(coreConfig.port);
 }
 bootstrap();
